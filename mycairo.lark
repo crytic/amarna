@@ -1,0 +1,55 @@
+
+cairo: (comment | function)*
+
+function : "func" word implicit_arg? "(" [argument ("," argument)*] ")" ["->" "(" [argument ("," argument)*] ")"]":\n" code* "end"
+
+code : call
+     | return
+     | assignment
+     | tempvar
+     | let
+     | hint
+     | comment
+     | line
+
+
+let : "let" anything "=" anything "\n"
+
+return : "ret" "\n"
+tempvar : "tempvar" (word | assignment) "\n"
+
+call: "call" word "\n"
+    | word "(" [argument ("," argument)*] ")" "\n"
+
+assignment: word "=" expr "\n"
+
+expr : word ["." word]
+
+hint: "%{" line* "%}"
+
+line: word* "\n"
+
+implicit_arg : "{" [argument ("," argument)*] "}"
+
+argument : word [":" type]
+
+type: word "*"?
+
+bla: "#" word
+
+comment: /#.*\n/
+
+_NEWLINE: ( /\r?\n[\t ]*/ )+
+
+lcase: "a".."z"
+ucase: "A".."Z"
+digits: "0".."9"
+letters: ucase | lcase | "_" | digits
+word: letters+
+all_chars: letters | ")" | "("
+anything: all_chars+
+
+%import common.SIGNED_NUMBER
+
+%import common.WORD
+%ignore /[\t \f]+/  // WS
