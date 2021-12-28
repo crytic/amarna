@@ -1,7 +1,9 @@
+from typing import Any, Dict
 from lark import Lark, tree, Visitor, exceptions
 import json
 import os
 
+# setup parser
 grammar_file = "cairo.lark"
 cairo_parser = Lark(
     open(grammar_file, "r").read(),
@@ -19,25 +21,17 @@ cairo_parser = Lark(
 )
 
 
-def print_child(z):
-    if z and hasattr(z, "children"):
-        print(z)
-        for child in z.children:
-            print_child(child)
-
-
 def make_png(t):
     tree.pydot__tree_to_png(t, "out.png")
 
 
-# make_png(t)
-def getPosition(tree):
+def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
     if hasattr(tree, "meta"):
         meta = tree.meta
         return (meta.line, meta.column, meta.end_line, meta.end_column)
 
 
-def sarif_out(filename, tree):
+def sarif_out(filename: str, tree: tree.Tree) -> Dict[str, Any]:
     start_line, start_col, end_line, end_col = getPosition(tree)
     return {
         "ruleId": f"warn-arith-{tree.data}",
@@ -69,30 +63,26 @@ class ArithmeticVisitor(Visitor):
     def __init__(self, fname) -> None:
         super().__init__()
         self.fname = fname
-
-    results = []
+        self.results = []
 
     def expr_mul(self, tree):
         self.results.append(sarif_out(self.fname, tree))
-        # print(f"mul: {tree}")
-
-    # def expr_sub(self, tree):
-    #     self.results.append(sarif_out(self.fname, tree))
-        # print(f"sub: {tree}")
 
     def expr_div(self, tree):
         self.results.append(sarif_out(self.fname, tree))
-        # print(f"div: {tree}")
 
     # def expr_add(self, tree):
     #     self.results.append(sarif_out(self.fname, tree))
-        # print(f"add: {tree}")
+
+    # def expr_sub(self, tree):
+    #     self.results.append(sarif_out(self.fname, tree))
 
 
-def find_arithmetic(filename):
+def find_arithmetic(filename: str):
     try:
         t = cairo_parser.parse(open(filename, "r").read(), start="cairo_file")
-    except exceptions.UnexpectedCharacters:
+    except exceptions.UnexpectedCharacters as e:
+        print(f"Could not parse {filename}: {e}")
         return []
     V = ArithmeticVisitor(filename)
     V.visit(t)
@@ -101,11 +91,7 @@ def find_arithmetic(filename):
 
 def test_basic():
     fname = "/Users/fcasal/Documents/repos/stark-perpetual/src/services/perpetual/cairo/order/validate_limit_order.cairo"
-
     find_arithmetic(fname)
-
-
-rootdir = "/Users/fcasal/Documents/repos/stark-perpetual/src"
 
 
 def search_directory(rootdir):
@@ -118,16 +104,14 @@ def search_directory(rootdir):
                 res = find_arithmetic(fname)
                 if res:
                     all_results += res
-                    total += 1
-                    if total > 0:
-                        break
 
     sarif = {
         "version": "2.1.0",
         "$schema": "http://json.schemastore.org/sarif-2.1.0-rtm.4",
-        "runs": [{"tool": {"driver": {"name": "Amarna"}}, "results": all_results[:20]}],
+        "runs": [{"tool": {"driver": {"name": "Amarna"}}, "results": all_results}],
     }
     open("arithm_warnings.sarif", "w").write(json.dumps(sarif))
 
 
+rootdir = "/Users/fcasal/Documents/repos/stark-perpetual/src"
 search_directory(rootdir)
