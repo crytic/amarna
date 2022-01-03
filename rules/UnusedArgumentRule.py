@@ -1,5 +1,5 @@
 from lark import tree, Visitor, Token
-from typing import Any, Dict, List, Set
+from typing import Set
 
 from output_sarif import *
 
@@ -8,7 +8,7 @@ class UnusedArgumentRule(Visitor):
     """
     Check for unused arguments inside a function
 
-    TODO: remove false positives from functions from a @contract_interface
+    TODO: remove false positives from functions within a @contract_interface
     """
 
     def run_rule(self, fname: str, tree: tree.Tree):

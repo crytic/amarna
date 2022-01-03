@@ -36,16 +36,8 @@ def main():
     else:
         results = analyze_file(filename, args.png)
 
-
-
     if args.output or args.print:
         create_sarif(results, args.output, args.print)
-
-
-def test_dir():
-    rootdir = "/Users/fcasal/Documents/repos/stark-perpetual/src"
-    results = analyze_directory(rootdir)
-    create_sarif(results, "arithm_warnings.sarif")
 
 
 if __name__ == "__main__":

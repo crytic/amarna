@@ -2,9 +2,6 @@ from typing import Any, List
 from lark import Lark, tree, exceptions
 import os
 
-from lark.visitors import Visitor
-
-
 from rules import all_rules_module
 import inspect
 
@@ -42,6 +39,9 @@ class Amarna:
         return cairo_parser
 
     def __init__(self):
+        """
+        Load Cairo grammar and analysis rules.
+        """
         self.parser = Amarna.load_cairo_grammar()
         self.rules = [
             cls() for (_, cls) in inspect.getmembers(all_rules_module, inspect.isclass)
@@ -68,21 +68,10 @@ class Amarna:
         return results
 
 
-def test_arithmetic():
-    amarna = Amarna()
-
-    fname = "./tests/validate_limit_order.cairo"
-    amarna.find_arithmetic(fname)
-
-
-def test_arguments():
-    amarna = Amarna()
-
-    fname = "./tests/validate_limit_order.cairo"
-    amarna.find_unused_arguments(fname)
-
-
 def analyze_directory(rootdir: str) -> List[Any]:
+    """
+    Run rules in all .cairo files inside a directory.
+    """
     amarna = Amarna()
 
     all_results = []
@@ -99,6 +88,9 @@ def analyze_directory(rootdir: str) -> List[Any]:
 
 
 def analyze_file(fname: str, png: bool = False) -> List[Any]:
+    """
+    Run analysis rules on a .cairo file.
+    """
     amarna = Amarna()
 
     return amarna.run_rules(fname, png)
@@ -106,4 +98,3 @@ def analyze_file(fname: str, png: bool = False) -> List[Any]:
 
 if __name__ == "__main__":
     pass
-    # t = test_arguments()

@@ -1,5 +1,5 @@
 from lark import tree, Visitor
-from typing import Any, Dict, List, Set
+from typing import Any, Dict
 
 from output_sarif import *
 

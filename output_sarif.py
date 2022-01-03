@@ -1,6 +1,6 @@
-import os
 from typing import Any, List, Optional, Dict
 import json
+import os
 
 
 def create_sarif(
