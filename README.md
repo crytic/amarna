@@ -9,9 +9,10 @@ Amarna is a static-analyzer for the Cairo programming language.
 
 ----
 
-# dangerous cairo patterns #
+# dangerous cairo patterns
  - [x] find arithmetic operations
  - [x] find functions with unused arguments
+ - [ ] find calls to uint256_add that do not check overflow (missing the assert https://github.com/OpenZeppelin/cairo-contracts/blob/main/contracts/token/ERC20.cairo#L102-L104 or using _)
  - [ ] find unused local variables
 
  - [ ] using ap and fp registers manually
