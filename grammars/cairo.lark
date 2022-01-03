@@ -46,7 +46,7 @@ decorator_list: (decorator _NEWLINE*)*
 ?pow: atom
     | atom _DBL_STAR notes pow -> expr_pow
 identifier: IDENTIFIER ("." IDENTIFIER)*
-identifier_def: IDENTIFIER
+identifier_def: IDENTIFIER                    -> identifier_def
 ?atom: INT                                    -> atom_number
      | HEXINT                                 -> atom_hex_number
      | PYCONST                                -> atom_pyconst
@@ -54,7 +54,7 @@ identifier_def: IDENTIFIER
      | "nondet" HINT                          -> atom_hint
      | reg                                    -> atom_reg
      | function_call                          -> atom_func_call
-     | identifier
+     | identifier                             -> atom_identifier
      | "[" notes expr "]"                     -> atom_deref
      | atom "[" notes expr "]"                -> atom_subscript
      | atom "." identifier_def                -> atom_dot
@@ -115,9 +115,9 @@ _import: "from" identifier "import" _import_body
 
 // Function/Namespace/Struct definition.
 _returns:  _ARROW _NEWLINE* "(" identifier_list ")"
-_arguments: "(" identifier_list ")"
+arguments: "(" identifier_list ")"
 implicit_arguments: ("{" identifier_list "}")?
-_funcdecl: "func" identifier_def implicit_arguments _arguments _NEWLINE* _returns? ":"
+_funcdecl: "func" identifier_def implicit_arguments arguments _NEWLINE* _returns? ":"
 _func: decorator_list _funcdecl _NEWLINE code_block "end"
 _if: "if" bool_expr ":" _NEWLINE code_block ("else" ":" _NEWLINE code_block)? "end"
 

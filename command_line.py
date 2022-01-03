@@ -12,10 +12,17 @@ def main():
         help="the name of the .cairo file or directory with .cairo files to analyze",
     )
 
-    parser.add_argument("-p", "--print", action="store_true")
+    parser.add_argument("-p", "--print", action="store_true", help="print output")
 
     parser.add_argument(
-        "-o", "--output", type=str, help="file to write the output results in sarif format"
+        "-o",
+        "--output",
+        type=str,
+        help="file to write the output results in sarif format",
+    )
+
+    parser.add_argument(
+        "-png", "--png", action="store_true", help="save a png with the AST of a file"
     )
 
     args = parser.parse_args()
@@ -27,9 +34,11 @@ def main():
     if os.path.isdir(filename):
         results = analyze_directory(filename)
     else:
-        results = analyze_file(filename)
+        results = analyze_file(filename, args.png)
 
-    if args.output:
+
+
+    if args.output or args.print:
         create_sarif(results, args.output, args.print)
 
 

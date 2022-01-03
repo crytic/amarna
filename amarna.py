@@ -1,77 +1,26 @@
-from typing import Any, Dict, List
-from lark import Lark, tree, Visitor, exceptions
+from typing import Any, List
+from lark import Lark, tree, exceptions
 import os
+
+from lark.visitors import Visitor
+
+
+from rules import all_rules_module
+import inspect
 
 
 def make_png(t: tree.Tree, out_name: str):
+    """
+    Creates a PNG of the AST in the out_name file
+    """
     tree.pydot__tree_to_png(t, out_name)
 
 
-def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
-    if hasattr(tree, "meta"):
-        meta = tree.meta
-        return (meta.line, meta.column, meta.end_line, meta.end_column)
-
-
-def sarif_out(filename: str, tree: tree.Tree) -> Dict[str, Any]:
-    start_line, start_col, end_line, end_col = getPosition(tree)
-    return {
-        "ruleId": f"arithmetic-{tree.data}",
-        "level": "warning",
-        "message": {
-            "text": "Cairo arithmetic is defined over a finite field and has potential for overflows."
-        },
-        "locations": [
-            {
-                "physicalLocation": {
-                    "artifactLocation": {"uri": "file://" + filename, "index": 0},
-                    "region": {
-                        "startLine": start_line,
-                        "startColumn": start_col,
-                        "endLine": end_line,
-                        "endColumn": end_col,
-                    },
-                }
-            }
-        ],
-    }
-
-
-class ArithmeticVisitor(Visitor):
-    """
-    Visit arithmetic nodes
-    """
-
-    def __init__(self, fname) -> None:
-        super().__init__()
-        self.fname = fname
-        self.results = []
-
-    def get_results(self):
-        return self.results
-
-    def expr_mul(self, tree):
-        self.results.append(sarif_out(self.fname, tree))
-
-    def expr_div(self, tree):
-        self.results.append(sarif_out(self.fname, tree))
-
-    def expr_add(self, tree: tree.Tree):
-        # ignore adding to registers
-        if tree.children[0].data == "atom_reg":
-            return
-
-        self.results.append(sarif_out(self.fname, tree))
-
-    def expr_sub(self, tree: tree.Tree):
-        # ignore adding to registers
-        if tree.children[0].data == "atom_reg":
-            return
-
-        self.results.append(sarif_out(self.fname, tree))
-
-
 class Amarna:
+    """
+    The main class -- loads the cairo grammar, and runs rules.
+    """
+
     @staticmethod
     def load_cairo_grammar():
         grammar_file = "grammars/cairo.lark"
@@ -94,24 +43,43 @@ class Amarna:
 
     def __init__(self):
         self.parser = Amarna.load_cairo_grammar()
+        self.rules = [
+            cls() for (_, cls) in inspect.getmembers(all_rules_module, inspect.isclass)
+        ]
 
-    def find_arithmetic(self, filename: str):
+    def run_rules(self, filename: str, png: bool = False):
+        """
+        Run all rules.
+
+        TODO: add argument to only run certain rule or exclude others.
+              add subclass for typing in the loop
+        """
+        # parse the cairo file
         try:
             t = self.parser.parse(open(filename, "r").read(), start="cairo_file")
         except exceptions.UnexpectedCharacters as e:
             print(f"Could not parse {filename}: {e}")
             return []
+        if png:
+            make_png(t, "temp.png")
+        results = []
+        for Rule in self.rules:
+            results += Rule.run_rule(filename, t)
+        return results
 
-        V = ArithmeticVisitor(filename)
-        V.visit(t)
-        return V.get_results()
 
-
-def test_basic():
+def test_arithmetic():
     amarna = Amarna()
 
-    fname = "/Users/fcasal/Documents/repos/stark-perpetual/src/services/perpetual/cairo/order/validate_limit_order.cairo"
+    fname = "./tests/validate_limit_order.cairo"
     amarna.find_arithmetic(fname)
+
+
+def test_arguments():
+    amarna = Amarna()
+
+    fname = "./tests/validate_limit_order.cairo"
+    amarna.find_unused_arguments(fname)
 
 
 def analyze_directory(rootdir: str) -> List[Any]:
@@ -124,22 +92,18 @@ def analyze_directory(rootdir: str) -> List[Any]:
             fname = os.path.join(subdir, file)
 
             if fname.endswith(".cairo"):
-                res = amarna.find_arithmetic(fname)
+                res = amarna.run_rules(fname)
                 if res:
                     all_results += res
     return all_results
 
 
-def analyze_file(fname: str) -> List[Any]:
+def analyze_file(fname: str, png: bool = False) -> List[Any]:
     amarna = Amarna()
 
-    return amarna.find_arithmetic(fname)
+    return amarna.run_rules(fname, png)
 
 
-############################
-# dangerous cairo patterns #
-############################
-# using ap and fp registers manually
-# call and jmp and revoked references
-# undefined behavior when using [ap] directly
-# callback before tempvars
+if __name__ == "__main__":
+    pass
+    # t = test_arguments()
