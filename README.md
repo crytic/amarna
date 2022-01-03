@@ -26,7 +26,7 @@ Amarna is a static-analyzer for the Cairo programming language.
  - analyze the `deleverage.cairo` file: `amarna deleverage.cairo -o deleverage.sarif`
 
 ```
-usage: command_line.py [-h] [-p] [-o OUTPUT] -f
+usage: command_line.py [-h] [-p] [-o OUTPUT] [-png] -f
 
 Analyze Cairo programs!
 
@@ -38,4 +38,5 @@ optional arguments:
   -p, --print           print output
   -o OUTPUT, --output OUTPUT
                         file to write the output results in sarif format
+  -png, --png           save a png with the AST of a file
 ```
