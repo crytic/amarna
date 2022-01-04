@@ -52,7 +52,6 @@ class Amarna:
         Run all rules.
 
         TODO: add argument to only run certain rule or exclude others.
-              add subclass for typing in the loop
         """
         # parse the cairo file
         try:
