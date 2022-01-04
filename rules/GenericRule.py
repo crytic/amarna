@@ -9,5 +9,6 @@ class GenericRule(Visitor):
     def run_rule(self, fname: str, tree: tree.Tree):
         self.fname = fname
         self.results = []
+        self.original_tree = tree
         self.visit(tree)
         return self.results
