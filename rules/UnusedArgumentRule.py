@@ -1,24 +1,19 @@
-from lark import tree, Visitor, Token
+from lark import tree, Token
 from typing import Set
 
 from output_sarif import *
+from rules.GenericRule import GenericRule
 
 
-class UnusedArgumentRule(Visitor):
+class UnusedArgumentRule(GenericRule):
     """
     Check for unused arguments inside a function
 
     TODO: remove false positives from functions within a @contract_interface
     """
 
-    def run_rule(self, fname: str, tree: tree.Tree):
-        self.fname = fname
-        self.results = []
-        self.visit(tree)
-        return self.results
-
-    def get_results(self):
-        return self.results
+    RULE_TEXT = "Unused arguments might indicate a misspelled variable use or unnecessary argument."
+    RULE_NAME = "unused-arguments"
 
     # visit the code_element_function node of the AST
     def code_element_function(self, tree: tree.Tree):
@@ -46,8 +41,8 @@ class UnusedArgumentRule(Visitor):
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)
             sarif = generic_sarif(
                 self.fname,
-                "unused_arguments",
-                "Unused arguments might indicate a misspelled variable use or unnecessary argument.",
+                self.RULE_NAME,
+                self.RULE_TEXT,
                 positions,
             )
             self.results.append(sarif)
