@@ -11,6 +11,3 @@ class GenericRule(Visitor):
         self.results = []
         self.visit(tree)
         return self.results
-
-    def get_results(self):
-        return self.results
