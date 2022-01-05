@@ -46,6 +46,13 @@ class UnusedArgumentRule(GenericRule):
         if not unused_arguments:
             return
 
+        # if NO argument is used, guess that its due to the cast pattern
+        # TODO: make precise by checking usage of cast(fp - 2 - STRUCT.SIZE, STRUCT*) and check that
+        #       - struct name matches the casted type
+        #       - all argument types match the struct types and order
+        if len(unused_arguments) == len(arguments) and function_name.endswith('_new'):
+            return
+
         # find if the current tree is part of a @contract_interface
         # to ignore unused arguments in that case
         for struct in self.original_tree.find_data("code_element_struct"):
