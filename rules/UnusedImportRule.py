@@ -13,31 +13,39 @@ class UnusedImportRule(GenericRule):
     RULE_TEXT = "Unused imports could be removed."
     RULE_NAME = "unused-imports"
 
-    # visit the code_element_import node of the AST
-    def code_element_import(self, tree: tree.Tree):
-        print("bump")
+    # visit the whole cairo_file node of the AST
+    def cairo_file(self, tree: tree.Tree):
+
         imports = set()
-        for child in tree.children:
-            if child.data == "aliased_identifier":
+        # iterate over the imports
+        for code_imports in tree.find_data("code_element_import"):
+            for child in code_imports.children:
 
-                # this is just a simple import
-                if len(child.children) == 1:
-                    id = child.children[0].children[0]
-                    if id in imports:
-                        print("double import of ", id)
-                    imports.add(id)
+                if child.data == "aliased_identifier":
 
-                # this is an aliased import import XX as YY, we keep the new name
-                elif len(child.children) == 2:
-                    id = child.children[1].children[0]
-                    if id in imports:
-                        print("double import of ", id)
-                    imports.add(child.children[1].children[0])
+                    # this is just a simple import
+                    if len(child.children) == 1:
+                        id = child.children[0].children[0]
+                        if id in imports:
+                            print("double import of ", id)
+                        imports.add(id)
 
-        # TODO: these are collected for all imports, and can be done once per file
+                    # this is an aliased import import XX as YY, we keep the new name
+                    elif len(child.children) == 2:
+                        id = child.children[1].children[0]
+                        if id in imports:
+                            print("double import of ", id)
+                        imports.add(child.children[1].children[0])
+
         used_ids: Set[Token] = set()
+        # gather identifiers used in the code
         for function_code in self.original_tree.find_data("code_element_function"):
-            for code_child in self.original_tree.find_data("identifier"):
+            for code_child in function_code.find_data("identifier"):
+                used_ids.add(code_child.children[0])
+
+        # gather types used in struct declaractions
+        for struct_declration in self.original_tree.find_data("code_element_struct"):
+            for code_child in struct_declration.find_data("identifier"):
                 used_ids.add(code_child.children[0])
 
         unused_imports = imports - used_ids
@@ -45,7 +53,6 @@ class UnusedImportRule(GenericRule):
             return
 
         # gather all hint code and check if the imports are there
-        # TODO: these are collected for all imports, and can be done once per file
         all_hints = ""
         for hint in self.original_tree.find_data("code_element_hint"):
             all_hints += hint.children[0]
