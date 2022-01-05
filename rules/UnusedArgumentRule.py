@@ -37,13 +37,17 @@ class UnusedArgumentRule(GenericRule):
                     if decorator.children[0] == "storage_var":
                         return
 
+        # find used identifiers in the function code
         used_ids: Set[Token] = set()
         for code_child in code_block.find_data("identifier"):
             used_ids.add(code_child.children[0])
 
         unused_arguments = arguments - used_ids
+        if not unused_arguments:
+            return
 
-        # find if this is part of a @contract_interface
+        # find if the current tree is part of a @contract_interface
+        # to ignore unused arguments in that case
         for struct in self.original_tree.find_data("code_element_struct"):
             for child in struct.find_data("decorator_list"):
                 for decorator in child.find_data("identifier_def"):
@@ -51,6 +55,7 @@ class UnusedArgumentRule(GenericRule):
                         if tree in struct.iter_subtrees():
                             return
 
+        # report unused arguments
         for arg in unused_arguments:
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)
             sarif = generic_sarif(

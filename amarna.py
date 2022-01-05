@@ -59,8 +59,11 @@ class Amarna:
         except exceptions.UnexpectedCharacters as e:
             print(f"Could not parse {filename}: {e}")
             return []
+
         if png:
-            make_png(t, "temp.png")
+            png_filename = os.path.basename(filename).split('.')[0] + ".png"
+            make_png(t, png_filename)
+
         results = []
         for Rule in self.rules:
             results += Rule.run_rule(filename, t)
