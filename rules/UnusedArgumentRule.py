@@ -50,8 +50,22 @@ class UnusedArgumentRule(GenericRule):
         # TODO: make precise by checking usage of cast(fp - 2 - STRUCT.SIZE, STRUCT*) and check that
         #       - struct name matches the casted type
         #       - all argument types match the struct types and order
-        if len(unused_arguments) == len(arguments) and function_name.endswith('_new'):
+        if len(unused_arguments) == len(arguments) and function_name.endswith("_new"):
             return
+
+        # # gather all hint code and check if the arguments are used there
+        # all_hints = ""
+        # for hint in self.original_tree.find_data("code_element_hint"):
+        #     all_hints += hint.children[0]
+
+        # # remove imports used in hints
+        # used_in_hints = set()
+        # for unused in unused_arguments:
+        #     argument_hint = "ids." + unused.value
+        #     if argument_hint in all_hints:
+        #         used_in_hints.add(unused)
+
+        # unused_arguments = unused_arguments - used_in_hints
 
         # find if the current tree is part of a @contract_interface
         # to ignore unused arguments in that case

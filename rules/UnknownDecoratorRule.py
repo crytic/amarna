@@ -13,7 +13,14 @@ class UnknownDecoratorRule(GenericRule):
     RULE_TEXT = "Unknown of misspelled function decorator."
     RULE_NAME = "unknown-decorator"
 
-    known_decorators = ["storage_var", "external", "view", "constructor"]
+    known_decorators = [
+        "storage_var",
+        "external",
+        "view",
+        "constructor",
+        "l1_handler",
+        "known_ap_change",
+    ]
 
     def code_element_function(self, tree: tree.Tree):
         unknown_decorators = []
