@@ -27,43 +27,48 @@ class DeadStoreRule(GenericRule):
     )
     RULE_NAME = "dead-store"
 
-    def code_block(self, tree: tree.Tree):
+    def code_element_function(self, tree: tree.Tree):
         # remaining assignment on this node:
         # inst_assert_eq
 
         dead_stores = set()
-        for child in tree.children:
-            sub_data = subtree_data(child)
-            if "code_element_temp_var" in sub_data:
-                id = get_identifier_of("code_element_temp_var", child)
-                dead_stores.add(id)
+        for main_child in tree.children:
+            if main_child.data != "code_block":
+                continue
 
-            elif "code_element_local_var" in sub_data:
-                id = get_identifier_of("code_element_local_var", child)
-                dead_stores.add(id)
+            for child in main_child.children:
+                sub_data = subtree_data(child)
+                if "code_element_temp_var" in sub_data:
+                    id = get_identifier_of("code_element_temp_var", child)
+                    dead_stores.add(id)
 
-            elif "inst_assert_eq" in sub_data:
-                for a in child.find_data("inst_assert_eq"):
-                    dead_stores.add(a.children[0].children[0].children[0])
+                elif "code_element_local_var" in sub_data:
+                    id = get_identifier_of("code_element_local_var", child)
+                    dead_stores.add(id)
 
-
-            elif "code_element_return" in sub_data:
-                id = get_identifier_of("code_element_return", child)
-                break
-            else:
-                for args in child.find_data("identifier_def"):
-                    el = args.children[0]
-                    if el in dead_stores:
-                        dead_stores.remove(el)
+                elif "inst_assert_eq" in sub_data:
+                    for a in child.find_data("inst_assert_eq"):
+                        for id in a.children[0].find_data("identifier"):
+                            dead_stores.add(id.children[0])
 
 
+                elif "code_element_return" in sub_data:
+                    for arg in dead_stores:
+                        positions = (arg.line, arg.column, arg.end_line, arg.end_column)
+                        sarif = generic_sarif(
+                            self.fname,
+                            self.RULE_NAME,
+                            self.RULE_TEXT,
+                            positions,
+                        )
+                        self.results.append(sarif)
+                    dead_stores = set()
+                    break
+                else:
+                    for args in child.find_data("identifier"):
+                        el = args.children[0]
+                        if el in dead_stores:
+                            dead_stores.remove(el)
 
-        for arg in dead_stores:
-            positions = (arg.line, arg.column, arg.end_line, arg.end_column)
-            sarif = generic_sarif(
-                self.fname,
-                self.RULE_NAME,
-                self.RULE_TEXT,
-                positions,
-            )
-            self.results.append(sarif)
+
+
