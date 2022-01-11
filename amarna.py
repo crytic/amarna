@@ -2,7 +2,7 @@ from typing import Any, List
 from lark import Lark, tree, exceptions
 import os
 
-from rules import all_rules_module
+from rules import all_rules_module, post_process_rules_module, all_gatherers_module
 import inspect
 
 
@@ -38,14 +38,21 @@ class Amarna:
 
         return cairo_parser
 
+    @staticmethod
+    def load_classes_in_module(module):
+        return [cls() for (_, cls) in inspect.getmembers(module, inspect.isclass)]
+
     def __init__(self):
         """
         Load Cairo grammar and analysis rules.
         """
         self.parser = Amarna.load_cairo_grammar()
-        self.rules = [
-            cls() for (_, cls) in inspect.getmembers(all_rules_module, inspect.isclass)
-        ]
+        self.data = {}
+        self.rules = Amarna.load_classes_in_module(all_rules_module)
+        self.post_process_rules = Amarna.load_classes_in_module(
+            post_process_rules_module
+        )
+        self.gatherers = Amarna.load_classes_in_module(all_gatherers_module)
 
     def run_rules(self, filename: str, png: bool = False):
         """
@@ -61,12 +68,22 @@ class Amarna:
             return []
 
         if png:
-            png_filename = os.path.basename(filename).split('.')[0] + ".png"
+            png_filename = os.path.basename(filename).split(".")[0] + ".png"
             make_png(t, png_filename)
 
         results = []
         for Rule in self.rules:
             results += Rule.run_rule(filename, t)
+
+        for Gatherer in self.gatherers:
+            self.data[Gatherer.GATHERER_NAME] = Gatherer.gather(filename, t)
+
+        return results
+
+    def run_post_process_rules(self):
+        results = []
+        for Rule in self.post_process_rules:
+            results += Rule.run_rule(self.data)
         return results
 
 
@@ -86,6 +103,8 @@ def analyze_directory(rootdir: str) -> List[Any]:
                 res = amarna.run_rules(fname)
                 if res:
                     all_results += res
+
+    all_results += amarna.run_post_process_rules()
     return all_results
 
 
