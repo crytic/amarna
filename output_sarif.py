@@ -2,6 +2,8 @@ from typing import Any, List, Optional, Dict
 import json
 import os
 
+from lark.lexer import Token
+
 
 def create_sarif(
     results: List[Any], fname: Optional[str] = None, printoutput: bool = False
@@ -46,3 +48,21 @@ def generic_sarif(filename: str, rule_name, text, positions) -> Dict[str, Any]:
             }
         ],
     }
+
+
+def token_positions(token: Token):
+    return (
+        token.line,
+        token.column,
+        token.end_line,
+        token.end_column,
+    )
+
+
+def generic_sarif_token(
+    filename: str, rule_name: str, text: str, token: Token
+) -> Dict[str, Any]:
+    """
+    Return a SARIF dictionary for a token.
+    """
+    return generic_sarif(filename, rule_name, text, token_positions(token))

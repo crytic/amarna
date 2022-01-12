@@ -24,21 +24,31 @@ class MustCheckReturnCodeRule:
         for call in function_calls:
             file_name, function_name, returned_list = call
 
+            # when the function is one of those returning errors
             if function_name in functions_returning_errors:
                 idx = functions_returning_errors[function_name]
                 must_check = returned_list[idx].children[0]
 
-                positions = (
-                    must_check.line,
-                    must_check.column,
-                    must_check.end_line,
-                    must_check.end_column,
-                )
-                sarif = generic_sarif(
+                sarif = generic_sarif_token(
                     file_name,
                     self.RULE_NAME,
                     self.RULE_TEXT,
-                    positions,
+                    must_check,
                 )
                 results.append(sarif)
+
+            # also check if returned values were named success or exists
+            else:
+                for return_name in returned_list:
+                    token = return_name.children[0]
+                    if token in ["success", "exists"]:
+
+                        sarif = generic_sarif_token(
+                            file_name,
+                            "sucess-must-be-checked",
+                            self.RULE_TEXT,
+                            token,
+                        )
+                        results.append(sarif)
+
         return results
