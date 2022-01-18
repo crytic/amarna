@@ -1,14 +1,8 @@
-from lark import tree, Visitor
+from lark import tree
 from typing import Any, Dict
 
-from output_sarif import *
+from output_sarif import generic_sarif, getPosition
 from rules.GenericRule import GenericRule
-
-
-def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
-    if hasattr(tree, "meta"):
-        meta = tree.meta
-        return (meta.line, meta.column, meta.end_line, meta.end_column)
 
 
 class ArithmeticOperationsRule(GenericRule):

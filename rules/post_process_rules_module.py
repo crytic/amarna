@@ -1,1 +1,2 @@
 from .MustCheckReturnCodeRule import MustCheckReturnCodeRule
+from .UnusedFunctionsRule import UnusedFunctionsRule

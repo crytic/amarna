@@ -1,2 +1,5 @@
 from .FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
+from .DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
+from .AllFunctionCallsGatherer import AllFunctionCallsGatherer
 from .FunctionCallsGatherer import FunctionCallsGatherer
+from .FunctionsUsedAsCallbacksGatherer import FunctionsUsedAsCallbacksGatherer

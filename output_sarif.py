@@ -3,6 +3,7 @@ import json
 import os
 
 from lark.lexer import Token
+from lark import tree
 
 
 def create_sarif(
@@ -57,6 +58,11 @@ def token_positions(token: Token):
         token.end_line,
         token.end_column,
     )
+
+
+def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
+    meta = tree.meta
+    return (meta.line, meta.column, meta.end_line, meta.end_column)
 
 
 def generic_sarif_token(

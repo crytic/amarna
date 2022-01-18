@@ -8,6 +8,7 @@ Amarna is a static-analyzer for the Cairo programming language.
  - find unused imports
  - find mistyped decorators
  - find functions that return error codes
+ - find unused functions
  - output results to sarif
 
 ----
