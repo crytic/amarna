@@ -3,7 +3,7 @@ from typing import Set
 
 from output_sarif import *
 from rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
-from rules.FunctionCallsGatherer import FunctionCallsGatherer
+from rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
 
 
 class MustCheckReturnCodeRule:
@@ -18,7 +18,7 @@ class MustCheckReturnCodeRule:
         functions_returning_errors = gathered_data[
             FunctionsReturningErrorsGatherer.GATHERER_NAME
         ]
-        function_calls = gathered_data[FunctionCallsGatherer.GATHERER_NAME]
+        function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 
         results = []
         for call in function_calls:

@@ -28,7 +28,7 @@ class DeclaredFunctionsGatherer(GenericGatherer):
                 break
 
         # TODO: handle function name shadowing.
-        if function_name in self.declared_functions:
-            print(f"[!] two functions declared with the same name: {function_name}")
+        # if function_name in self.declared_functions:
+        #     print(f"[!] two functions declared with the same name: {function_name}")
 
         self.declared_functions[function_name] = (getPosition(tree), self.fname)

@@ -6,12 +6,12 @@ from output_sarif import *
 from rules.GenericGatherer import GenericGatherer
 
 
-class FunctionCallsGatherer(GenericGatherer):
+class RValueFunctionCallsGatherer(GenericGatherer):
     """
-    Gather function calls and their return values.
+    Gather function calls that return to a variable, and their return values.
     """
 
-    GATHERER_NAME = "FunctionCallsGatherer"
+    GATHERER_NAME = "RValueFunctionCallsGatherer"
 
     def __init__(self) -> None:
         super().__init__()

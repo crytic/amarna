@@ -26,11 +26,23 @@ def create_sarif(
         print(json.dumps(sarif))
 
 
-def generic_sarif(filename: str, rule_name, text, positions) -> Dict[str, Any]:
+def sarif_region_from_position(position):
+    """
+    Return the sarif region field for a code location
+    """
+    start_line, start_col, end_line, end_col = position
+    return {
+        "startLine": start_line,
+        "startColumn": start_col,
+        "endLine": end_line,
+        "endColumn": end_col,
+    }
+
+
+def generic_sarif(filename: str, rule_name, text, position) -> Dict[str, Any]:
     """
     Return a SARIF dictionary for a filename, rule, text description and code location.
     """
-    start_line, start_col, end_line, end_col = positions
     return {
         "ruleId": rule_name,
         "level": "warning",
@@ -39,19 +51,54 @@ def generic_sarif(filename: str, rule_name, text, positions) -> Dict[str, Any]:
             {
                 "physicalLocation": {
                     "artifactLocation": {"uri": "file://" + filename, "index": 0},
-                    "region": {
-                        "startLine": start_line,
-                        "startColumn": start_col,
-                        "endLine": end_line,
-                        "endColumn": end_col,
-                    },
+                    "region": sarif_region_from_position(position),
                 }
             }
         ],
     }
 
 
+def generic_sarif_two_positions(
+    filename: str, relatedfilename: str, rule_name, text, position_list
+):
+    return {
+        "ruleId": rule_name,
+        "level": "warning",
+        "message": {"text": text},
+        "locations": [
+            {
+                "physicalLocation": {
+                    "artifactLocation": {"uri": "file://" + filename, "index": 0},
+                    "region": sarif_region_from_position(position_list[0]),
+                },
+            }
+        ],
+        "relatedLocations": [
+            {
+                "id": 0,
+                "physicalLocation": {
+                    "artifactLocation": {"uri": "file://" + filename, "index": 0},
+                    "region": sarif_region_from_position(position_list[0]),
+                },
+            },
+            {
+                "id": 1,
+                "physicalLocation": {
+                    "artifactLocation": {
+                        "uri": "file://" + relatedfilename,
+                        "index": 0,
+                    },
+                    "region": sarif_region_from_position(position_list[1]),
+                },
+            },
+        ],
+    }
+
+
 def token_positions(token: Token):
+    """
+    Get the file locations of a token: line, col, end_line, end_col
+    """
     return (
         token.line,
         token.column,
@@ -61,6 +108,9 @@ def token_positions(token: Token):
 
 
 def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
+    """
+    Get the file locations of the tree: line, col, end_line, end_col
+    """
     meta = tree.meta
     return (meta.line, meta.column, meta.end_line, meta.end_column)
 

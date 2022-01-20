@@ -9,6 +9,7 @@ Amarna is a static-analyzer for the Cairo programming language.
  - find mistyped decorators
  - find functions that return error codes
  - find unused functions
+ - find asserts that use the same constant in different ways, e.g., assert_le(amount, BOUND) and assert_le(amount, BOUND - 1)
  - output results to sarif
 
 ----

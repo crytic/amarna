@@ -1,2 +1,3 @@
 from .MustCheckReturnCodeRule import MustCheckReturnCodeRule
 from .UnusedFunctionsRule import UnusedFunctionsRule
+from .UniformAssertsConstants import UniformAssertsConstants

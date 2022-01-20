@@ -20,12 +20,12 @@ class AllFunctionCallsGatherer(GenericGatherer):
     def get_gathered_data(self):
         return self.function_calls
 
-    def code_block(self, tree: tree.Tree):
+    def function_call(self, func: tree.Tree):
 
-        for func in tree.find_data("function_call"):
-            id = func.children[0]
-            function_name = id.children[0].value
+        id = func.children[0]
+        function_name = id.children[0].value
+        arguments = func.children[-1]
 
-            tup = (self.fname, function_name)
+        tup = (self.fname, function_name, arguments)
 
-            self.function_calls.append(tup)
+        self.function_calls.append(tup)

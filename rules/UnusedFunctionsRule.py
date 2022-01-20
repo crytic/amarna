@@ -26,12 +26,17 @@ class UnusedFunctionsRule:
         callbacks = gathered_data[FunctionsUsedAsCallbacksGatherer.GATHERER_NAME]
 
         results = []
-        for call in function_calls + callbacks:
-            _, function_name = call
+        for call in function_calls:
+            _, function_name, _ = call
 
             if function_name in declared_functions:
                 del declared_functions[function_name]
 
+        for call in callbacks:
+            _, function_name = call
+
+            if function_name in declared_functions:
+                del declared_functions[function_name]
         for unused in declared_functions:
             (position, file_name) = declared_functions[unused]
 
