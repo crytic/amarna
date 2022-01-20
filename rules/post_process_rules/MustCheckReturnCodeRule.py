@@ -2,8 +2,8 @@ from lark import tree
 from typing import Set
 
 from output_sarif import *
-from rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
-from rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
+from rules.gatherer_rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
+from rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
 
 
 class MustCheckReturnCodeRule:

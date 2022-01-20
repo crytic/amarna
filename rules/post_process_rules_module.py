@@ -1,3 +1,3 @@
-from .MustCheckReturnCodeRule import MustCheckReturnCodeRule
-from .UnusedFunctionsRule import UnusedFunctionsRule
-from .UniformAssertsConstants import UniformAssertsConstants
+from .post_process_rules.MustCheckReturnCodeRule import MustCheckReturnCodeRule
+from .post_process_rules.UnusedFunctionsRule import UnusedFunctionsRule
+from .post_process_rules.UniformAssertsConstants import UniformAssertsConstants

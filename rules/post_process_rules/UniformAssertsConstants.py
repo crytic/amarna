@@ -5,7 +5,7 @@ from lark import tree
 from typing import Set
 
 from output_sarif import *
-from rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
+from rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 import re
 
 UPPER_CASE_PATTERN = re.compile("^[A-Z_]{2,}$")

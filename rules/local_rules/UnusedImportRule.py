@@ -65,8 +65,12 @@ class UnusedImportRule(GenericRule):
 
         unused_imports = unused_imports - used_in_hints
 
+        # if unused_imports:
+        #     print(f"In file {self.fname}:")
+
         # report unused imports
         for arg in unused_imports:
+            # print(f"\t{arg.value} imported at line {arg.line}")
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)
             sarif = generic_sarif(
                 self.fname,
