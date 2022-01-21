@@ -12,7 +12,7 @@ Amarna is a static-analyzer for the Cairo programming language.
 
 ### Currently supported rules
 
-| Num | Rule                          | What it finds                                                                                                             | Impact  | Precision    |
+| #   | Rule                          | What it finds                                                                                                             | Impact  | Precision    |
 | --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------- | ------------ |
 | 1   | Arithmetic operations         | All uses of arithmetic operations +,-,*,/                                                                                 | Info    | High         |
 | 2   | Unused arguments              | Function arguments that are not used in that function                                                                     | Warning | High         |
