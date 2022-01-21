@@ -2,9 +2,24 @@ import argparse
 from amarna.amarna import analyze_directory, analyze_file
 from amarna.output_sarif import *
 
+example_usage = """---------------\nUsage examples\n---------------
+Analyze a Cairo project in the current directory and export results to a file:
+ amarna . -o out.sarif
+
+Analyze a single file `deleverage.cairo` and export results to a file:
+ amarna deleverage.cairo -o deleverage.sarif
+
+Parse a Cairo file and output the recovered AST in `png`:
+ amarna file.cairo -png"""
+
 
 def main():
-    parser = argparse.ArgumentParser(description="Analyze Cairo programs!")
+
+    parser = argparse.ArgumentParser(
+        description="Amarna is a static-analyzer for the Cairo programming language.",
+        epilog=example_usage,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
     parser.add_argument(
         "filename",
         metavar="-f",
