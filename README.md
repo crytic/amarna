@@ -3,7 +3,7 @@
 Amarna is a static-analyzer for the Cairo programming language.
 
 ## Features
- - Finds code-smells and potentially vulnerabilities in Cairo code
+ - Finds code-smells and potential vulnerabilities in Cairo code
  - Compiler-identical parsing of Cairo code and StarkNet contracts
  - Supports creating local and global rules
  - Exports the parsed AST of a Cairo file
@@ -45,6 +45,12 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         file to write the output results in sarif format
   -png, --png           save a png with the AST of a file
+```
+
+## Installation
+```bash
+git clone git@github.com:trailofbits/amarna.git && cd amarna
+pip install -e .
 ```
 
 
