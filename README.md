@@ -27,9 +27,20 @@ Amarna is a static-analyzer for the Cairo programming language.
 
 
 ## Usage
- - analyze all `.cairo` files in the current directory and export to file: `amarna . -o out.sarif`
- - analyze the `deleverage.cairo` file and export to a file: `amarna deleverage.cairo -o deleverage.sarif`
- - parse a Cairo file and export its AST: `amarna file.cairo -png`
+Analyze a Cairo project in the current directory and export results to a file:
+ ```bash
+ amarna . -o out.sarif
+ ```
+
+Analyze a single file `deleverage.cairo` and export results to a file:
+ ```bash
+ amarna deleverage.cairo -o deleverage.sarif
+ ```
+
+Parse a Cairo file and the recovered AST in png
+ ```bash
+ amarna file.cairo -png
+ ```
 
 ```
 usage: amarna [-h] [-p] [-o OUTPUT] [-png] -f
@@ -46,6 +57,10 @@ optional arguments:
                         file to write the output results in sarif format
   -png, --png           save a png with the AST of a file
 ```
+
+## SARIF file format
+The [SARIF](https://sarifweb.azurewebsites.net/) file format is a standard format for static-analysis tools and can be viewed in vscode with the [official extension](https://github.com/Microsoft/sarif-vscode-extension/).
+
 
 ## Installation
 ```bash
