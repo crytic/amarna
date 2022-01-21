@@ -1,6 +1,6 @@
 import argparse
-from amarna import *
-from output_sarif import *
+from amarna.amarna import analyze_directory, analyze_file
+from amarna.output_sarif import *
 
 
 def main():

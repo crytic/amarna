@@ -1,8 +1,9 @@
 from lark import tree, Token
 from typing import Set
 
-from output_sarif import *
-from rules.GenericRule import GenericRule
+from amarna.output_sarif import *
+
+from amarna.rules.GenericRule import GenericRule
 
 
 class UnusedArgumentRule(GenericRule):

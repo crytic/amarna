@@ -1,9 +1,7 @@
 from lark import tree
-from typing import Set
 
-
-from output_sarif import *
-from rules.GenericGatherer import GenericGatherer
+from amarna.output_sarif import *
+from amarna.rules.GenericGatherer import GenericGatherer
 
 
 class FunctionsUsedAsCallbacksGatherer(GenericGatherer):

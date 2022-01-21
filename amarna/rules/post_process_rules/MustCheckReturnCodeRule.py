@@ -1,9 +1,9 @@
 from lark import tree
 from typing import Set
 
-from output_sarif import *
-from rules.gatherer_rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
-from rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
+from amarna.output_sarif import *
+from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
+from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
 
 
 class MustCheckReturnCodeRule:

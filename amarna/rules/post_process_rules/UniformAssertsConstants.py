@@ -1,11 +1,5 @@
-from ast import arg
-from curses.ascii import isdigit
-from fileinput import filename
-from lark import tree
-from typing import Set
-
-from output_sarif import *
-from rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
+from amarna.output_sarif import *
+from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 import re
 
 UPPER_CASE_PATTERN = re.compile("^[A-Z_]{2,}$")

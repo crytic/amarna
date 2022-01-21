@@ -1,10 +1,10 @@
 from lark import tree
 from typing import Set
 
-from output_sarif import *
-from rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
-from rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
-from rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import FunctionsUsedAsCallbacksGatherer
+from amarna.output_sarif import *
+from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
+from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
+from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import FunctionsUsedAsCallbacksGatherer
 
 
 class UnusedFunctionsRule:

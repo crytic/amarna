@@ -2,7 +2,7 @@ from typing import Any, List
 from lark import Lark, tree, exceptions
 import os
 
-from rules import all_rules_module, post_process_rules_module, all_gatherers_module
+from amarna.rules import all_rules_module, post_process_rules_module, all_gatherers_module
 import inspect
 
 
@@ -20,7 +20,7 @@ class Amarna:
 
     @staticmethod
     def load_cairo_grammar():
-        grammar_file = "grammars/cairo.lark"
+        grammar_file = "./amarna/grammars/cairo.lark"
         cairo_parser = Lark(
             open(grammar_file, "r").read(),
             start=[
