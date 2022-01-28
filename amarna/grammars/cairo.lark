@@ -25,10 +25,15 @@ type: "felt"                           -> type_felt
 
 // Expressions.
 expr_assignment: expr | identifier_def "=" expr
+non_def_expr_assignment: expr | named_identifier "=" expr
+
 ?arg_list_item: expr_assignment
+?non_def_arg_list_item: non_def_expr_assignment
+
 comma: ","
 _expr_sep: (comma | nonempty_notes)+
 arg_list: (notes arg_list_item? (_expr_sep arg_list_item)* _expr_sep?)
+non_def_arg_list: (notes non_def_arg_list_item? (_expr_sep non_def_arg_list_item)* _expr_sep?)
 
 decorator: _AT identifier_def
 decorator_list: (decorator _NEWLINE*)*
@@ -47,6 +52,7 @@ decorator_list: (decorator _NEWLINE*)*
     | atom _DBL_STAR notes pow -> expr_pow
 identifier: IDENTIFIER ("." IDENTIFIER)*
 identifier_def: IDENTIFIER                    -> identifier_def
+named_identifier: IDENTIFIER                    -> named_identifier
 ?atom: INT                                    -> atom_number
      | HEXINT                                 -> atom_hex_number
      | PYCONST                                -> atom_pyconst
@@ -93,7 +99,7 @@ call_instruction: "call" "rel" expr                   -> inst_call_rel
 instruction: instruction_body                    -> instruction_noap
            | instruction_body ";" "ap" _DBL_PLUS -> instruction_ap
 
-function_call: identifier ("{" arg_list "}")? "(" arg_list ")"
+function_call: identifier ("{" non_def_arg_list "}")? "(" non_def_arg_list ")"
 
 // Reference expressions.
 rvalue: call_instruction     -> rvalue_call_instruction
@@ -143,7 +149,7 @@ code_element: instruction                                       -> code_element_
             | "tempvar" typed_identifier ("=" expr)?            -> code_element_temp_var
             | "assert" expr "=" expr                            -> code_element_compound_assert_eq
             | "static_assert" expr _DBL_EQ expr                 -> code_element_static_assert
-            | "return" "(" arg_list ")"                         -> code_element_return
+            | "return" "(" non_def_arg_list ")"                 -> code_element_return
             | "return" function_call                            -> code_element_tail_call
             | _if                                               -> code_element_if
             | function_call                                     -> code_element_func_call

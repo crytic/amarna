@@ -28,11 +28,12 @@ class RValueFunctionCallsGatherer(GenericGatherer):
         rvalues = children[1]
         returned_values = children[0]
 
+        returned_list = [
+            returned for returned in returned_values.find_data("identifier_def")
+        ]
+
         for func in rvalues.find_data("function_call"):
             id = func.children[0]
             function_name = id.children[0].value
-            returned_list = [
-                returned for returned in returned_values.find_data("identifier_def")
-            ]
             tup = (self.fname, function_name, returned_list)
             self.function_calls.append(tup)
