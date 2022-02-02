@@ -23,6 +23,7 @@ Amarna is a static-analyzer for the Cairo programming language.
 | 7   | Inconsistent assert usage     | Asserts that use the same constant in different ways, e.g., `assert_le(amount, BOUND)` and `assert_le(amount, BOUND - 1)` | Warning | High      |
 | 8   | Dead stores                   | Variables that are assigned values but not used before a return statement                                                 | Info    | Medium    |
 | 9   | Potential unchecked overflows | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
+| 10  | Caller address return value   | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
 
 
 

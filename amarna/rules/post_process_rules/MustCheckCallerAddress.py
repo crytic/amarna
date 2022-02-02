@@ -5,18 +5,18 @@ from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
 )
 
 
-class MustCheckOverflow:
+class MustCheckCallerAddress:
     """
-    Gather function calls and their return values.
+    Gather function calls to get_caller_address.
     """
 
-    RULE_TEXT = "This function returns a variable that indicates if an overflow occurred and must be properly checked."
-    IGNORED_RULE_TEXT = "This function ignores the overflow indicator variable."
+    RULE_TEXT = "The function get_caller_address returns 0 when the contract is called directly which might be unexpected"
+    IGNORED_RULE_TEXT = "The result of get_caller_address is ignored."
 
-    RULE_NAME = "must-check-overflow"
+    RULE_NAME = "must-check-caller-address"
 
-    # dictionary with function_name : index of the returned overflow variable
-    OVERFLOW_FUNCTIONS = {"uint256_add": 1}
+    # dictionary with function_name : index of the caller address
+    TARGET_FUNCTION = {"get_caller_address": 0}
 
     def run_rule(self, gathered_data):
 
@@ -26,14 +26,13 @@ class MustCheckOverflow:
         for call in function_calls:
             file_name, function_name, returned_list = call
 
-            # when the function is one of those returning errors
-            if function_name in self.OVERFLOW_FUNCTIONS:
-                overflow_idx = self.OVERFLOW_FUNCTIONS[function_name]
+            if function_name in self.TARGET_FUNCTION:
+                idx = self.TARGET_FUNCTION[function_name]
 
-                must_check = returned_list[overflow_idx].children[0]
+                must_check = returned_list[idx].children[0]
 
                 if must_check == "_":
-                    # the overflow return value is being ignored
+                    # the caller address is being ignored
                     rule = self.IGNORED_RULE_TEXT
                 else:
                     # here we say that it must be checked
