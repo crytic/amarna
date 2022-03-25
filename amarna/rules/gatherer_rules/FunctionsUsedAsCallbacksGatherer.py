@@ -1,6 +1,5 @@
-from lark import tree
+from lark import Tree
 
-from amarna.output_sarif import *
 from amarna.rules.GenericGatherer import GenericGatherer
 
 
@@ -18,10 +17,10 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
     def get_gathered_data(self):
         return self.function_calls
 
-    def function_call(self, tree: tree.Tree):
+    def function_call(self, tree: Tree):
 
-        id = tree.children[0]
-        function_name = id.children[0].value
+        children_id = tree.children[0]
+        function_name = children_id.children[0].value
         if function_name == "serialize_array":
             arguments = tree.children[1]
             callback_arg = arguments.children[-1]

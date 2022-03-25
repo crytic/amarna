@@ -1,8 +1,4 @@
 from lark import tree
-from typing import Set
-
-
-from amarna.output_sarif import *
 from amarna.rules.GenericGatherer import GenericGatherer
 
 
@@ -22,8 +18,8 @@ class AllFunctionCallsGatherer(GenericGatherer):
 
     def function_call(self, func: tree.Tree):
 
-        id = func.children[0]
-        function_name = id.children[0].value
+        func_id = func.children[0]
+        function_name = func_id.children[0].value
         arguments = func.children[-1]
 
         tup = (self.fname, function_name, arguments)

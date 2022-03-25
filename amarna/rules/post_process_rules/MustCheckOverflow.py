@@ -1,16 +1,19 @@
-from amarna.output_sarif import *
+from amarna.output_sarif import generic_sarif_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
     RValueFunctionCallsGatherer,
 )
 
-
+# pylint: disable=too-few-public-methods
 class MustCheckOverflow:
     """
     Gather function calls and their return values.
     """
 
-    RULE_TEXT = "This function returns a variable that indicates if an overflow occurred and must be properly checked."
+    RULE_TEXT = (
+        "This function returns a variable that indicates"
+        + " if an overflow occurred and must be properly checked."
+    )
     IGNORED_RULE_TEXT = "This function ignores the overflow indicator variable."
 
     RULE_NAME = "must-check-overflow"

@@ -1,9 +1,9 @@
-from typing import Any, List, Optional, Dict
+from typing import Any, List, Optional, Dict, Tuple
 import json
 import os
 
 from lark.lexer import Token
-from lark import tree
+from lark import Tree
 
 
 def create_sarif(
@@ -19,7 +19,7 @@ def create_sarif(
     }
 
     if fname:
-        with open(os.path.join(os.getcwd(), fname), "w") as f:
+        with open(os.path.join(os.getcwd(), fname), "w", encoding="utf8") as f:
             json.dump(sarif, f, indent=1)
 
     if printoutput:
@@ -107,7 +107,7 @@ def token_positions(token: Token):
     )
 
 
-def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
+def getPosition(tree: Tree) -> Tuple[int, int, int, int]:
     """
     Get the file locations of the tree: line, col, end_line, end_col
     """

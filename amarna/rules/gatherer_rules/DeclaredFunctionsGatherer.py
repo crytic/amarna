@@ -1,8 +1,4 @@
-from lark import tree
-from typing import Set
-
-
-from amarna.output_sarif import *
+from lark import Tree
 from amarna.rules.GenericGatherer import GenericGatherer
 from amarna.output_sarif import getPosition
 
@@ -21,7 +17,7 @@ class DeclaredFunctionsGatherer(GenericGatherer):
     def get_gathered_data(self):
         return self.declared_functions
 
-    def code_element_function(self, tree: tree.Tree):
+    def code_element_function(self, tree: Tree):
         for child in tree.children:
             if child.data == "identifier_def":
                 function_name = str(child.children[0])

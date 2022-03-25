@@ -1,6 +1,5 @@
-from lark import tree, Token
-
-from amarna.output_sarif import *
+from lark import Tree, Token
+from amarna.output_sarif import generic_sarif_token
 from amarna.rules.GenericRule import GenericRule
 
 
@@ -12,7 +11,8 @@ class DeadStoreRule(GenericRule):
     RULE_TEXT = "This variable is assigned or declared here but not used before a return statement."
     RULE_NAME = "dead-store"
 
-    def code_element_function(self, tree: tree.Tree):
+    def code_element_function(self, tree: Tree):
+        # pylint: disable=too-many-branches,too-many-nested-blocks,too-many-locals
         # gather implicit arguments
         implicits_and_arguments = []
         for impls in tree.find_data("implicit_arguments"):
@@ -42,10 +42,11 @@ class DeadStoreRule(GenericRule):
                         if tok in defines:
                             defines.remove(tok)
 
-                    # add lvalues. These can be false positives when a = b is an assert and not an assignment
+                    # add lvalues. These can be false positives
+                    # when a = b is an assert and not an assignment
                     for a in child.find_data("inst_assert_eq"):
-                        for id in a.children[0].find_data("identifier"):
-                            defines.add(id.children[0])
+                        for children_id in a.children[0].find_data("identifier"):
+                            defines.add(children_id.children[0])
 
                     # in a return statement, check which variables were not used
                     for subcode in child.children[0].find_data("code_element_return"):

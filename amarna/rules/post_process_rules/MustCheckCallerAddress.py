@@ -1,16 +1,19 @@
-from amarna.output_sarif import *
+from amarna.output_sarif import generic_sarif_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
     RValueFunctionCallsGatherer,
 )
 
-
+# pylint: disable=too-few-public-methods
 class MustCheckCallerAddress:
     """
     Gather function calls to get_caller_address.
     """
 
-    RULE_TEXT = "The function get_caller_address returns 0 when the contract is called directly which might be unexpected"
+    RULE_TEXT = (
+        "The function get_caller_address returns 0"
+        + " when the contract is called directly which might be unexpected"
+    )
     IGNORED_RULE_TEXT = "The result of get_caller_address is ignored."
 
     RULE_NAME = "must-check-caller-address"

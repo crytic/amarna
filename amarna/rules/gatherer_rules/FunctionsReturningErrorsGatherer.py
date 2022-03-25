@@ -1,8 +1,5 @@
-from lark import tree
-from typing import Set
+from lark import Tree
 
-
-from amarna.output_sarif import *
 from amarna.rules.GenericGatherer import GenericGatherer
 
 
@@ -16,7 +13,7 @@ class FunctionsReturningErrorsGatherer(GenericGatherer):
     def get_gathered_data(self):
         return self.functions_returning_errors
 
-    def code_element_function(self, tree: tree.Tree):
+    def code_element_function(self, tree: Tree):
         return_code_pos = -1
         for child in tree.children:
             if child.data == "identifier_def":
