@@ -11,4 +11,3 @@ class GenericGatherer(Visitor):
         self.results = []
         self.visit(tree)
         return self.get_gathered_data()
-

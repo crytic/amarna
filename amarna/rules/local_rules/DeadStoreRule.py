@@ -50,16 +50,10 @@ class DeadStoreRule(GenericRule):
                     # in a return statement, check which variables were not used
                     for subcode in child.children[0].find_data("code_element_return"):
                         tokens = [
-                            str(tok)
-                            for tok in subcode.scan_values(
-                                lambda v: isinstance(v, Token)
-                            )
+                            str(tok) for tok in subcode.scan_values(lambda v: isinstance(v, Token))
                         ]
                         for dead_store in defines:
-                            if (
-                                dead_store in tokens
-                                or dead_store in implicits_and_arguments
-                            ):
+                            if dead_store in tokens or dead_store in implicits_and_arguments:
                                 continue
                             sarif = generic_sarif_token(
                                 self.fname,
