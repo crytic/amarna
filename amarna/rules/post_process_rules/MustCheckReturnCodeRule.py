@@ -1,3 +1,5 @@
+from typing import Dict, Any, List
+
 from amarna.output_sarif import generic_sarif_token
 from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import (
     FunctionsReturningErrorsGatherer,
@@ -13,7 +15,7 @@ class MustCheckReturnCodeRule:
     RULE_TEXT = "This function returns an error code which must be properly checked."
     RULE_NAME = "must-check-error-code"
 
-    def run_rule(self, gathered_data):
+    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
         functions_returning_errors = gathered_data[FunctionsReturningErrorsGatherer.GATHERER_NAME]
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 

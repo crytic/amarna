@@ -1,4 +1,5 @@
 import re
+from typing import Dict, Any, List
 
 from lark import Token
 
@@ -8,7 +9,7 @@ from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCall
 UPPER_CASE_PATTERN = re.compile("^[A-Z_]{2,}$")
 
 
-def is_constant_case(s):
+def is_constant_case(s: str) -> bool:
     return bool(UPPER_CASE_PATTERN.match(s))
 
 
@@ -22,7 +23,7 @@ class UniformAssertsConstants:
     RULE_TEXT = "This assertion uses the same constant differently [here](0) and [here](1)."
     RULE_NAME = "inconsistent-assert-constant"
 
-    def run_rule(self, gathered_data):
+    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
         # pylint: disable=too-many-locals
         function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
 

@@ -1,3 +1,5 @@
+from typing import Dict, List, Any
+
 from amarna.output_sarif import generic_sarif_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
@@ -21,11 +23,11 @@ class MustCheckCallerAddress:
     # dictionary with function_name : index of the caller address
     TARGET_FUNCTION = {"get_caller_address": 0}
 
-    def run_rule(self, gathered_data):
+    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
 
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 
-        results = []
+        results: List[Dict[str, Any]] = []
         for call in function_calls:
             file_name, function_name, returned_list = call
 

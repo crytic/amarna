@@ -1,4 +1,4 @@
-from typing import Set
+from typing import Set, Optional, Any
 from lark import Tree, Token
 
 from amarna.output_sarif import generic_sarif
@@ -15,13 +15,18 @@ class UnusedArgumentRule(GenericRule):
     RULE_NAME = "unused-arguments"
 
     # visit the code_element_function node of the AST
-    def code_element_function(self, tree: Tree):
+    def code_element_function(self, tree: Tree) -> None:
         # pylint: disable=too-many-branches
+
+        function_name: Optional[str] = None
+        code_block: Optional[Any] = None
+
         arguments = set()
         for child in tree.children:
             # get the function name
             if child.data == "identifier_def":
-                function_name = child.children[0]
+                # TODO (montyly): attribute access error
+                function_name = child.children[0]  # type: ignore
 
             # get the arguments names
             elif child.data == "arguments":
@@ -39,6 +44,9 @@ class UnusedArgumentRule(GenericRule):
                     # to check argument usage because there is no code.
                     if decorator.children[0] == "storage_var":
                         return
+
+        assert function_name
+        assert code_block
 
         # find used identifiers in the function code
         used_ids: Set[Token] = set()
@@ -81,7 +89,8 @@ class UnusedArgumentRule(GenericRule):
 
         # report unused arguments
         for arg in unused_arguments:
-            positions = (arg.line, arg.column, arg.end_line, arg.end_column)
+            # TODO (montyly): mypy complain about the next attributes accesses
+            positions = (arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
             sarif = generic_sarif(
                 self.fname,
                 self.RULE_NAME,

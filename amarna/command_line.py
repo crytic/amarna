@@ -14,7 +14,7 @@ Parse a Cairo file and output the recovered AST in `png`:
  amarna file.cairo -png"""
 
 
-def main():
+def main() -> None:
 
     parser = argparse.ArgumentParser(
         description="Amarna is a static-analyzer for the Cairo programming language.",

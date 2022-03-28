@@ -1,5 +1,5 @@
-from typing import Dict
-from amarna.output_sarif import generic_sarif
+from typing import Dict, Any, List, Tuple
+from amarna.output_sarif import generic_sarif, PositionType
 
 from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
@@ -18,8 +18,10 @@ class UnusedFunctionsRule:
 
     # TODO: handle interfaces and import shadowing other function names
 
-    def run_rule(self, gathered_data):
-        declared_functions: Dict[str] = gathered_data[DeclaredFunctionsGatherer.GATHERER_NAME]
+    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
+        declared_functions: Dict[str, Tuple[PositionType, str]] = gathered_data[
+            DeclaredFunctionsGatherer.GATHERER_NAME
+        ]
         function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
 
         callbacks = gathered_data[FunctionsUsedAsCallbacksGatherer.GATHERER_NAME]
