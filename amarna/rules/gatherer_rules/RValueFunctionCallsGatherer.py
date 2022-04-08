@@ -28,9 +28,7 @@ class RValueFunctionCallsGatherer(GenericGatherer):
         rvalues = children[1]
         returned_values = children[0]
 
-        returned_list = [
-            returned for returned in returned_values.find_data("identifier_def")
-        ]
+        returned_list = [returned for returned in returned_values.find_data("identifier_def")]
 
         for func in rvalues.find_data("function_call"):
             id = func.children[0]

@@ -2,7 +2,9 @@ from lark import tree
 from typing import Set
 
 from amarna.output_sarif import *
-from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import FunctionsReturningErrorsGatherer
+from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import (
+    FunctionsReturningErrorsGatherer,
+)
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
 
 
@@ -15,9 +17,7 @@ class MustCheckReturnCodeRule:
     RULE_NAME = "must-check-error-code"
 
     def run_rule(self, gathered_data):
-        functions_returning_errors = gathered_data[
-            FunctionsReturningErrorsGatherer.GATHERER_NAME
-        ]
+        functions_returning_errors = gathered_data[FunctionsReturningErrorsGatherer.GATHERER_NAME]
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 
         results = []

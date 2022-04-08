@@ -49,9 +49,7 @@ class Amarna:
         self.parser = Amarna.load_cairo_grammar()
         self.data = {}
         self.rules = Amarna.load_classes_in_module(all_rules_module)
-        self.post_process_rules = Amarna.load_classes_in_module(
-            post_process_rules_module
-        )
+        self.post_process_rules = Amarna.load_classes_in_module(post_process_rules_module)
         self.gatherers = Amarna.load_classes_in_module(all_gatherers_module)
 
     def run_rules(self, filename: str, png: bool = False):

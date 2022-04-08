@@ -34,8 +34,7 @@ class UniformAssertsConstants:
                     argument_tokens = sorted(
                         list(
                             arg_tree.scan_values(
-                                lambda v: isinstance(v, Token)
-                                and is_constant_case(v.value)
+                                lambda v: isinstance(v, Token) and is_constant_case(v.value)
                             )
                         )
                     )

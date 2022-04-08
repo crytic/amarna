@@ -115,9 +115,7 @@ def getPosition(tree: tree.Tree) -> tuple[int, int, int, int]:
     return (meta.line, meta.column, meta.end_line, meta.end_column)
 
 
-def generic_sarif_token(
-    filename: str, rule_name: str, text: str, token: Token
-) -> Dict[str, Any]:
+def generic_sarif_token(filename: str, rule_name: str, text: str, token: Token) -> Dict[str, Any]:
     """
     Return a SARIF dictionary for a token.
     """
