@@ -1,7 +1,7 @@
-from lark import tree, Token
 from typing import Set
+from lark import Tree, Token
 
-from amarna.output_sarif import *
+from amarna.output_sarif import generic_sarif
 
 from amarna.rules.GenericRule import GenericRule
 
@@ -15,7 +15,8 @@ class UnusedArgumentRule(GenericRule):
     RULE_NAME = "unused-arguments"
 
     # visit the code_element_function node of the AST
-    def code_element_function(self, tree: tree.Tree):
+    def code_element_function(self, tree: Tree):
+        # pylint: disable=too-many-branches
         arguments = set()
         for child in tree.children:
             # get the function name
@@ -34,7 +35,8 @@ class UnusedArgumentRule(GenericRule):
             # ignore if the function is a @storage_var
             elif child.data == "decorator_list":
                 for decorator in child.find_data("identifier_def"):
-                    # since this is a class attribute, there is no need to check argument usage because there is no code.
+                    # since this is a class attribute, there is no need
+                    # to check argument usage because there is no code.
                     if decorator.children[0] == "storage_var":
                         return
 

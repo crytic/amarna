@@ -1,6 +1,7 @@
+import os
 import argparse
 from amarna.amarna import analyze_directory, analyze_file
-from amarna.output_sarif import *
+from amarna.output_sarif import create_sarif
 
 example_usage = """---------------\nUsage examples\n---------------
 Analyze a Cairo project in the current directory and export results to a file:

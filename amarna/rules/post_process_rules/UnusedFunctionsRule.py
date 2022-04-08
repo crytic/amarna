@@ -1,14 +1,13 @@
-from lark import tree
-from typing import Set
+from typing import Dict
+from amarna.output_sarif import generic_sarif
 
-from amarna.output_sarif import *
 from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
     FunctionsUsedAsCallbacksGatherer,
 )
 
-
+# pylint: disable=too-few-public-methods
 class UnusedFunctionsRule:
     """
     Match declared functions and called functions or callbacks to find unused functions.

@@ -1,7 +1,6 @@
-from lark import tree
-from typing import Set
+from lark import Tree
 
-from amarna.output_sarif import *
+from amarna.output_sarif import generic_sarif
 from amarna.rules.GenericRule import GenericRule
 
 
@@ -22,7 +21,7 @@ class UnknownDecoratorRule(GenericRule):
         "known_ap_change",
     ]
 
-    def code_element_function(self, tree: tree.Tree):
+    def code_element_function(self, tree: Tree):
         unknown_decorators = []
         for child in tree.children:
             if child.data == "decorator_list":

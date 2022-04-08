@@ -1,5 +1,4 @@
-from lark import tree
-from typing import Any, Dict
+from lark import Tree
 
 from amarna.output_sarif import generic_sarif, getPosition
 from amarna.rules.GenericRule import GenericRule
@@ -27,7 +26,7 @@ class ArithmeticOperationsRule(GenericRule):
         )
         self.results.append(sarif)
 
-    def expr_add(self, tree: tree.Tree):
+    def expr_add(self, tree: Tree):
         # ignore adding to registers
         if tree.children[0].data == "atom_reg":
             return
@@ -37,7 +36,7 @@ class ArithmeticOperationsRule(GenericRule):
         )
         self.results.append(sarif)
 
-    def expr_sub(self, tree: tree.Tree):
+    def expr_sub(self, tree: Tree):
         # ignore subtracting to registers
         if tree.children[0].data == "atom_reg":
             return

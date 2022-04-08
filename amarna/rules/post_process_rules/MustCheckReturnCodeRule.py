@@ -1,13 +1,10 @@
-from lark import tree
-from typing import Set
-
-from amarna.output_sarif import *
+from amarna.output_sarif import generic_sarif_token
 from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import (
     FunctionsReturningErrorsGatherer,
 )
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFunctionCallsGatherer
 
-
+# pylint: disable=too-few-public-methods
 class MustCheckReturnCodeRule:
     """
     Gather function calls and their return values.

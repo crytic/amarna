@@ -1,9 +1,9 @@
+import os
+import inspect
 from typing import Any, List
 from lark import Lark, tree, exceptions
-import os
 
 from amarna.rules import all_rules_module, post_process_rules_module, all_gatherers_module
-import inspect
 
 
 def make_png(t: tree.Tree, out_name: str):
@@ -21,8 +21,10 @@ class Amarna:
     @staticmethod
     def load_cairo_grammar():
         grammar_file = "./amarna/grammars/cairo.lark"
+        with open(grammar_file, "r", encoding="utf8") as f:
+            buf = f.read()
         cairo_parser = Lark(
-            open(grammar_file, "r").read(),
+            buf,
             start=[
                 "cairo_file",
                 "code_block",
@@ -60,7 +62,8 @@ class Amarna:
         """
         # parse the cairo file
         try:
-            t = self.parser.parse(open(filename, "r").read(), start="cairo_file")
+            with open(filename, "r", encoding="utf8") as f:
+                t = self.parser.parse(f.read(), start="cairo_file")
         except exceptions.UnexpectedCharacters as e:
             print(f"Could not parse {filename}: {e}")
             return []
@@ -93,7 +96,7 @@ def analyze_directory(rootdir: str) -> List[Any]:
 
     all_results = []
 
-    for subdir, dirs, files in os.walk(rootdir):
+    for subdir, _dirs, files in os.walk(rootdir):
         for file in files:
             fname = os.path.join(subdir, file)
 

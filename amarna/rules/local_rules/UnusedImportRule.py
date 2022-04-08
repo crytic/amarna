@@ -1,7 +1,6 @@
-from lark import tree, Token
 from typing import Set
-
-from amarna.output_sarif import *
+from lark import Tree, Token
+from amarna.output_sarif import generic_sarif
 from amarna.rules.GenericRule import GenericRule
 
 
@@ -14,7 +13,8 @@ class UnusedImportRule(GenericRule):
     RULE_NAME = "unused-imports"
 
     # visit the whole cairo_file node of the AST
-    def cairo_file(self, tree: tree.Tree):
+    def cairo_file(self, tree: Tree):
+        # pylint: disable=too-many-locals,too-many-branches
 
         imports = set()
         # iterate over the imports
@@ -25,16 +25,16 @@ class UnusedImportRule(GenericRule):
 
                     # this is just a simple import
                     if len(child.children) == 1:
-                        id = child.children[0].children[0]
-                        if id in imports:
-                            print("double import of ", id)
-                        imports.add(id)
+                        child_id = child.children[0].children[0]
+                        if child_id in imports:
+                            print("double import of ", child_id)
+                        imports.add(child_id)
 
                     # this is an aliased import import XX as YY, we keep the new name
                     elif len(child.children) == 2:
-                        id = child.children[1].children[0]
-                        if id in imports:
-                            print("double import of ", id)
+                        child_id = child.children[1].children[0]
+                        if child_id in imports:
+                            print("double import of ", child_id)
                         imports.add(child.children[1].children[0])
 
         used_ids: Set[Token] = set()
