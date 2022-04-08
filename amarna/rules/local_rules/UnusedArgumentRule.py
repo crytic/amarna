@@ -88,7 +88,7 @@ class UnusedArgumentRule(GenericRule):
                             return
 
         # report unused arguments
-        for arg in unused_arguments:
+        for arg in sorted(unused_arguments):
             # TODO (montyly): mypy complain about the next attributes accesses
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
             sarif = generic_sarif(
