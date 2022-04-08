@@ -1,12 +1,13 @@
-import os
 import inspect
-from typing import Any, List
+import os
+from typing import Any, List, Dict
+
 from lark import Lark, tree, exceptions
 
 from amarna.rules import all_rules_module, post_process_rules_module, all_gatherers_module
 
 
-def make_png(t: tree.Tree, out_name: str):
+def make_png(t: tree.Tree, out_name: str) -> None:
     """
     Creates a PNG of the AST in the out_name file
     """
@@ -19,7 +20,7 @@ class Amarna:
     """
 
     @staticmethod
-    def load_cairo_grammar():
+    def load_cairo_grammar() -> Lark:
         grammar_file = "./amarna/grammars/cairo.lark"
         with open(grammar_file, "r", encoding="utf8") as f:
             buf = f.read()
@@ -41,20 +42,23 @@ class Amarna:
         return cairo_parser
 
     @staticmethod
-    def load_classes_in_module(module):
+    def load_classes_in_module(module: Any) -> List:
         return [cls() for (_, cls) in inspect.getmembers(module, inspect.isclass)]
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Load Cairo grammar and analysis rules.
         """
         self.parser = Amarna.load_cairo_grammar()
-        self.data = {}
+        # self.data maps the gather name to the value returned by
+        # the different "gather" functions
+        # Which return a GenericGatherType type (python generic)
+        self.data: Dict[str, Any] = {}
         self.rules = Amarna.load_classes_in_module(all_rules_module)
         self.post_process_rules = Amarna.load_classes_in_module(post_process_rules_module)
         self.gatherers = Amarna.load_classes_in_module(all_gatherers_module)
 
-    def run_rules(self, filename: str, png: bool = False):
+    def run_rules(self, filename: str, png: bool = False) -> List[Dict[str, Any]]:
         """
         Run all rules.
 
@@ -72,7 +76,7 @@ class Amarna:
             png_filename = os.path.basename(filename).split(".")[0] + ".png"
             make_png(t, png_filename)
 
-        results = []
+        results: List[Dict[str, Any]] = []
         for Rule in self.rules:
             results += Rule.run_rule(filename, t)
 
@@ -81,7 +85,7 @@ class Amarna:
 
         return results
 
-    def run_post_process_rules(self):
+    def run_post_process_rules(self) -> List[Dict[str, Any]]:
         results = []
         for Rule in self.post_process_rules:
             results += Rule.run_rule(self.data)

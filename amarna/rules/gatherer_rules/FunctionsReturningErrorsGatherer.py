@@ -1,6 +1,10 @@
+from typing import Dict, Optional
+
 from lark import Tree
 
 from amarna.rules.GenericGatherer import GenericGatherer
+
+FunctionReturningType = Dict[str, int]
 
 
 class FunctionsReturningErrorsGatherer(GenericGatherer):
@@ -8,13 +12,14 @@ class FunctionsReturningErrorsGatherer(GenericGatherer):
 
     def __init__(self) -> None:
         super().__init__()
-        self.functions_returning_errors = {}
+        self.functions_returning_errors: FunctionReturningType = {}
 
-    def get_gathered_data(self):
+    def get_gathered_data(self) -> FunctionReturningType:
         return self.functions_returning_errors
 
-    def code_element_function(self, tree: Tree):
+    def code_element_function(self, tree: Tree) -> None:
         return_code_pos = -1
+        function_name: Optional[str] = None
         for child in tree.children:
             if child.data == "identifier_def":
                 function_name = str(child.children[0])
@@ -28,5 +33,7 @@ class FunctionsReturningErrorsGatherer(GenericGatherer):
 
         if return_code_pos == -1:
             return
+
+        assert function_name
 
         self.functions_returning_errors[function_name] = return_code_pos

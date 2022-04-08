@@ -1,3 +1,5 @@
+from typing import Set
+
 from lark import Tree, Token
 from amarna.output_sarif import generic_sarif_token
 from amarna.rules.GenericRule import GenericRule
@@ -11,7 +13,7 @@ class DeadStoreRule(GenericRule):
     RULE_TEXT = "This variable is assigned or declared here but not used before a return statement."
     RULE_NAME = "dead-store"
 
-    def code_element_function(self, tree: Tree):
+    def code_element_function(self, tree: Tree) -> None:
         # pylint: disable=too-many-branches,too-many-nested-blocks,too-many-locals
         # gather implicit arguments
         implicits_and_arguments = []
@@ -24,7 +26,7 @@ class DeadStoreRule(GenericRule):
             for args in allargs.find_data("identifier_def"):
                 implicits_and_arguments.append(str(args.children[0]))
 
-        defines = set()
+        defines: Set[Token] = set()
         for main_child in tree.children:
             if main_child.data != "code_block":
                 continue
@@ -34,19 +36,19 @@ class DeadStoreRule(GenericRule):
                     # add identifier definitions that aren't _, __fp__ or pc_val
                     for defn in child.find_data("identifier_def"):
                         if defn.children[0] not in ["_", "__fp__", "pc_val"]:
-                            defines.add(defn.children[0])
+                            defines.add(defn.children[0])  # type: ignore
 
                     # remove identifier uses
                     for uses in child.find_data("identifier"):
                         tok = uses.children[0]
                         if tok in defines:
-                            defines.remove(tok)
+                            defines.remove(tok)  # type: ignore
 
                     # add lvalues. These can be false positives
                     # when a = b is an assert and not an assignment
                     for a in child.find_data("inst_assert_eq"):
                         for children_id in a.children[0].find_data("identifier"):
-                            defines.add(children_id.children[0])
+                            defines.add(children_id.children[0])  # type: ignore
 
                     # in a return statement, check which variables were not used
                     for subcode in child.children[0].find_data("code_element_return"):

@@ -13,7 +13,7 @@ class UnusedImportRule(GenericRule):
     RULE_NAME = "unused-imports"
 
     # visit the whole cairo_file node of the AST
-    def cairo_file(self, tree: Tree):
+    def cairo_file(self, tree: Tree) -> None:
         # pylint: disable=too-many-locals,too-many-branches
 
         imports = set()
@@ -41,12 +41,14 @@ class UnusedImportRule(GenericRule):
         # gather identifiers used in the code
         for function_code in self.original_tree.find_data("code_element_function"):
             for code_child in function_code.find_data("identifier"):
-                used_ids.add(code_child.children[0])
+                # TODO (montyly): attribute access error
+                used_ids.add(code_child.children[0])  # type: ignore
 
         # gather types used in struct declaractions
         for struct_declration in self.original_tree.find_data("code_element_struct"):
             for code_child in struct_declration.find_data("identifier"):
-                used_ids.add(code_child.children[0])
+                # TODO (montyly): attribute access error
+                used_ids.add(code_child.children[0])  # type: ignore
 
         unused_imports = imports - used_ids
         if not unused_imports:

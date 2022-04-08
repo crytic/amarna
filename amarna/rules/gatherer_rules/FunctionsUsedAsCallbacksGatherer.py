@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 from lark import Tree
 
 from amarna.rules.GenericGatherer import GenericGatherer
@@ -12,20 +14,20 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
 
     def __init__(self) -> None:
         super().__init__()
-        self.function_calls = []
+        self.function_calls: List[Tuple[str, str]] = []
 
-    def get_gathered_data(self):
+    def get_gathered_data(self) -> List[Tuple[str, str]]:
         return self.function_calls
 
-    def function_call(self, tree: Tree):
+    def function_call(self, tree: Tree) -> None:
 
         children_id = tree.children[0]
-        function_name = children_id.children[0].value
+        # TODO (montyly): attribute access error
+        function_name = children_id.children[0].value  # type: ignore
         if function_name == "serialize_array":
             arguments = tree.children[1]
             callback_arg = arguments.children[-1]
             ids = list(callback_arg.find_data("identifier"))
-
             # variable callback
             if len(ids) == 1:
                 token = ids[0].children[0]
@@ -35,6 +37,11 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
             elif len(ids) == 3:
                 # also idx 0
                 token = ids[0].children[0]
+
+            else:
+                raise Exception(
+                    "Function call path not implemented in amarna, please open an issue"
+                )
 
             tup = (self.fname, str(token))
             self.function_calls.append(tup)

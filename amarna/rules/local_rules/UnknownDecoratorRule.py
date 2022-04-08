@@ -21,7 +21,7 @@ class UnknownDecoratorRule(GenericRule):
         "known_ap_change",
     ]
 
-    def code_element_function(self, tree: Tree):
+    def code_element_function(self, tree: Tree) -> None:
         unknown_decorators = []
         for child in tree.children:
             if child.data == "decorator_list":
@@ -31,7 +31,8 @@ class UnknownDecoratorRule(GenericRule):
                         unknown_decorators.append(decorator)
 
         for arg in unknown_decorators:
-            positions = (arg.line, arg.column, arg.end_line, arg.end_column)
+            # TODO (montyly): mypy compain about the next attributes access
+            positions = (arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
             sarif = generic_sarif(
                 self.fname,
                 self.RULE_NAME,

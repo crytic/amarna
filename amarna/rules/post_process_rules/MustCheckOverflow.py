@@ -1,3 +1,5 @@
+from typing import Dict, Any, List
+
 from amarna.output_sarif import generic_sarif_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
@@ -21,7 +23,7 @@ class MustCheckOverflow:
     # dictionary with function_name : index of the returned overflow variable
     OVERFLOW_FUNCTIONS = {"uint256_add": 1}
 
-    def run_rule(self, gathered_data):
+    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
 
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 

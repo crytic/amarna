@@ -5,6 +5,10 @@ import os
 from lark.lexer import Token
 from lark import Tree
 
+# line, column, end_line, end_column
+# TODO (montyly): consider creating a namedtuple
+PositionType = Tuple[int, int, int, int]
+
 
 def create_sarif(
     results: List[Any], fname: Optional[str] = None, printoutput: bool = False
@@ -26,7 +30,7 @@ def create_sarif(
         print(json.dumps(sarif))
 
 
-def sarif_region_from_position(position):
+def sarif_region_from_position(position: PositionType) -> Dict[str, int]:
     """
     Return the sarif region field for a code location
     """
@@ -39,7 +43,12 @@ def sarif_region_from_position(position):
     }
 
 
-def generic_sarif(filename: str, rule_name, text, position) -> Dict[str, Any]:
+SarifOuputType = Dict[str, Any]
+
+
+def generic_sarif(
+    filename: str, rule_name: str, text: str, position: PositionType
+) -> SarifOuputType:
     """
     Return a SARIF dictionary for a filename, rule, text description and code location.
     """
@@ -59,8 +68,12 @@ def generic_sarif(filename: str, rule_name, text, position) -> Dict[str, Any]:
 
 
 def generic_sarif_two_positions(
-    filename: str, relatedfilename: str, rule_name, text, position_list
-):
+    filename: str,
+    relatedfilename: str,
+    rule_name: str,
+    text: str,
+    position_list: List[PositionType],
+) -> Dict:
     return {
         "ruleId": rule_name,
         "level": "warning",
@@ -95,7 +108,7 @@ def generic_sarif_two_positions(
     }
 
 
-def token_positions(token: Token):
+def token_positions(token: Token) -> PositionType:
     """
     Get the file locations of a token: line, col, end_line, end_col
     """
@@ -107,7 +120,7 @@ def token_positions(token: Token):
     )
 
 
-def getPosition(tree: Tree) -> Tuple[int, int, int, int]:
+def getPosition(tree: Tree) -> PositionType:
     """
     Get the file locations of the tree: line, col, end_line, end_col
     """
