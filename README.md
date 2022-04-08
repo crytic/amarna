@@ -12,18 +12,18 @@ Amarna is a static-analyzer for the Cairo programming language.
 
 ### Currently supported rules
 
-| #   | Rule                          | What it finds                                                                                                             | Impact  | Precision |
-| --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------- | --------- |
-| 1   | Arithmetic operations         | All uses of arithmetic operations +,-,*,/                                                                                 | Info    | High      |
-| 2   | Unused arguments              | Function arguments that are not used in that function                                                                     | Warning | High      |
-| 3   | Unused imports                | Unused imports                                                                                                            | Info    | High      |
-| 4   | Mistyped decorators           | Mistyped code decorators                                                                                                  | Info    | High      |
-| 5   | Unused functions              | Functions that are never called                                                                                           | Info    | Medium    |
-| 6   | Error codes                   | Function calls that have a return value that must be checked                                                              | Info    | High      |
-| 7   | Inconsistent assert usage     | Asserts that use the same constant in different ways, e.g., `assert_le(amount, BOUND)` and `assert_le(amount, BOUND - 1)` | Warning | High      |
-| 8   | Dead stores                   | Variables that are assigned values but not used before a return statement                                                 | Info    | Medium    |
-| 9   | Potential unchecked overflows | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
-| 10  | Caller address return value   | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
+| #   | Rule                        | What it finds                                                                                                             | Impact  | Precision |
+| --- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------- | --------- |
+| 1   | Arithmetic operations       | All uses of arithmetic operations +, -, *, and /                                                                          | Info    | High      |
+| 2   | Unused arguments            | Function arguments that are not used in the functions in which they appear                                                | Warning | High      |
+| 3   | Unused imports              | Unused imports                                                                                                            | Info    | High      |
+| 4   | Mistyped decorators         | Mistyped code decorators                                                                                                  | Info    | High      |
+| 5   | Unused functions            | Functions that are never called                                                                                           | Info    | Medium    |
+| 6   | Error codes                 | Function calls that have return values that must be checked                                                               | Info    | High      |
+| 7   | Inconsistent assert usage   | Asserts that use the same constant in different ways, e.g., `assert_le(amount, BOUND)` and `assert_le(amount, BOUND - 1)` | Warning | High      |
+| 8   | Dead stores                 | Variables that are assigned values but not used before a return statement                                                 | Info    | Medium    |
+| 9   | Unchecked overflows         | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
+| 10  | Caller address return value | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
 
 
 
@@ -75,7 +75,7 @@ pip install -e .
 The static-analysis rules can be:
    - local rules, which analyse each file independently.
    - gatherer rules, which analyse each file independently and gather data to be used in post-process rules.
-   - post-process rules, which run after all files were analyzed can use the data gatherer in the gatherer rules.
+   - post-process rules, which run after all files were analyzed can use the data gathered in the gatherer rules.
 
 Examples of these are:
  - local rules: find all arithmetic operations in a file
