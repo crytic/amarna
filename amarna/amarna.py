@@ -1,7 +1,7 @@
 import inspect
 import os
 from typing import Any, List, Dict
-
+from pathlib import Path
 from lark import Lark, tree, exceptions
 
 from amarna.rules import all_rules_module, post_process_rules_module, all_gatherers_module
@@ -21,8 +21,9 @@ class Amarna:
 
     @staticmethod
     def load_cairo_grammar() -> Lark:
-        grammar_file = "./amarna/grammars/cairo.lark"
-        with open(grammar_file, "r", encoding="utf8") as f:
+        _module_dir = Path(__file__).resolve().parent
+        GRAMMAR_FILENAME = _module_dir.joinpath("grammars", "cairo.lark")
+        with open(GRAMMAR_FILENAME, "r", encoding="utf8") as f:
             buf = f.read()
         cairo_parser = Lark(
             buf,
