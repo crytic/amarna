@@ -55,7 +55,7 @@ class DeadStoreRule(GenericRule):
                         tokens = [
                             str(tok) for tok in subcode.scan_values(lambda v: isinstance(v, Token))
                         ]
-                        for dead_store in defines:
+                        for dead_store in sorted(defines):
                             if dead_store in tokens or dead_store in implicits_and_arguments:
                                 continue
                             sarif = generic_sarif_token(
