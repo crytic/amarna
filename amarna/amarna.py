@@ -59,38 +59,50 @@ class Amarna:
         self.post_process_rules = Amarna.load_classes_in_module(post_process_rules_module)
         self.gatherers = Amarna.load_classes_in_module(all_gatherers_module)
 
-    def run_rules(self, filename: str, png: bool = False) -> List[Dict[str, Any]]:
+    def run_local_rules(
+        self, filename: str, parsed_cairo_file: Any, png: bool = False
+    ) -> List[Dict[str, Any]]:
         """
-        Run all rules.
+        Run all local rules.
 
         TODO: add argument to only run certain rule or exclude others.
         """
-        # parse the cairo file
-        try:
-            with open(filename, "r", encoding="utf8") as f:
-                t = self.parser.parse(f.read(), start="cairo_file")
-        except exceptions.UnexpectedCharacters as e:
-            print(f"Could not parse {filename}: {e}")
-            return []
-
         if png:
             png_filename = os.path.basename(filename).split(".")[0] + ".png"
-            make_png(t, png_filename)
+            make_png(parsed_cairo_file, png_filename)
 
         results: List[Dict[str, Any]] = []
         for Rule in self.rules:
-            results += Rule.run_rule(filename, t)
-
-        for Gatherer in self.gatherers:
-            self.data[Gatherer.GATHERER_NAME] = Gatherer.gather(filename, t)
+            results += Rule.run_rule(filename, parsed_cairo_file)
 
         return results
 
+    def run_gatherer_rules(self, filename, parsed_cairo_file) -> None:
+        """
+        Run all gatherer rules.
+        """
+        for Gatherer in self.gatherers:
+            self.data[Gatherer.GATHERER_NAME] = Gatherer.gather(filename, parsed_cairo_file)
+
     def run_post_process_rules(self) -> List[Dict[str, Any]]:
+        """
+        Run all post-processing rules.
+        """
         results = []
         for Rule in self.post_process_rules:
             results += Rule.run_rule(self.data)
         return results
+
+    def parse_cairo_file(self, filename: str):
+        """
+        Parse the cairo file
+        """
+        try:
+            with open(filename, "r", encoding="utf8") as f:
+                return self.parser.parse(f.read(), start="cairo_file")
+        except exceptions.UnexpectedCharacters as e:
+            print(f"Could not parse {filename}: {e}")
+            return None
 
 
 def analyze_directory(rootdir: str) -> List[Any]:
@@ -106,9 +118,12 @@ def analyze_directory(rootdir: str) -> List[Any]:
             fname = os.path.join(subdir, file)
 
             if fname.endswith(".cairo"):
-                res = amarna.run_rules(fname)
-                if res:
-                    all_results += res
+                parsed_cairo_file = amarna.parse_cairo_file(fname)
+                if not parsed_cairo_file:
+                    continue
+
+                all_results += amarna.run_local_rules(fname, parsed_cairo_file)
+                amarna.run_gatherer_rules(fname, parsed_cairo_file)
 
     all_results += amarna.run_post_process_rules()
     return all_results
@@ -120,7 +135,7 @@ def analyze_file(fname: str, png: bool = False) -> List[Any]:
     """
     amarna = Amarna()
 
-    return amarna.run_rules(fname, png)
+    return amarna.run_local_rules(fname, png)
 
 
 if __name__ == "__main__":
