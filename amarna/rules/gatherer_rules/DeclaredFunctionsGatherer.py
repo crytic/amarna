@@ -2,7 +2,7 @@ from typing import Tuple, Dict, Optional
 
 from lark import Tree
 from amarna.rules.GenericGatherer import GenericGatherer
-from amarna.output_sarif import getPosition, PositionType
+from amarna.Result import getPosition, PositionType
 
 
 class DeclaredFunctionsGatherer(GenericGatherer):

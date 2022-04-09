@@ -2,8 +2,8 @@ import re
 from typing import Dict, Any, List
 
 from lark import Token
+from amarna.Result import result_multiple_positions, getPosition
 
-from amarna.output_sarif import generic_sarif_two_positions, getPosition
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 
 UPPER_CASE_PATTERN = re.compile("^[A-Z_]{2,}$")
@@ -62,7 +62,7 @@ class UniformAssertsConstants:
                         # they are being used differently
                         if old_tree != arg_tree:
 
-                            sarif = generic_sarif_two_positions(
+                            sarif = result_multiple_positions(
                                 file_name,
                                 old_filename,
                                 self.RULE_NAME,

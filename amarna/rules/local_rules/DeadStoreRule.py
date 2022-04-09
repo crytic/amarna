@@ -1,8 +1,8 @@
 from typing import Set
 
 from lark import Tree, Token
-from amarna.output_sarif import generic_sarif_token
 from amarna.rules.GenericRule import GenericRule
+from amarna.Result import create_result_token
 
 
 class DeadStoreRule(GenericRule):
@@ -58,7 +58,7 @@ class DeadStoreRule(GenericRule):
                         for dead_store in sorted(defines):
                             if dead_store in tokens or dead_store in implicits_and_arguments:
                                 continue
-                            sarif = generic_sarif_token(
+                            sarif = create_result_token(
                                 self.fname,
                                 self.RULE_NAME,
                                 self.RULE_TEXT,

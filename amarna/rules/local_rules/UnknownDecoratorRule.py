@@ -1,7 +1,7 @@
 from lark import Tree
 
-from amarna.output_sarif import generic_sarif
 from amarna.rules.GenericRule import GenericRule
+from amarna.Result import create_result
 
 
 class UnknownDecoratorRule(GenericRule):
@@ -33,7 +33,7 @@ class UnknownDecoratorRule(GenericRule):
         for arg in unknown_decorators:
             # TODO (montyly): mypy compain about the next attributes access
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
-            sarif = generic_sarif(
+            sarif = create_result(
                 self.fname,
                 self.RULE_NAME,
                 self.RULE_TEXT,

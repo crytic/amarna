@@ -1,6 +1,7 @@
 from typing import Set
 from lark import Tree, Token
-from amarna.output_sarif import generic_sarif
+from amarna.Result import create_result
+
 from amarna.rules.GenericRule import GenericRule
 
 
@@ -74,7 +75,7 @@ class UnusedImportRule(GenericRule):
         for arg in sorted(unused_imports):
             # print(f"\t{arg.value} imported at line {arg.line}")
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)
-            sarif = generic_sarif(
+            sarif = create_result(
                 self.fname,
                 self.RULE_NAME,
                 self.RULE_TEXT,

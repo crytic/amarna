@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
+from amarna.Result import create_result_token
 
-from amarna.output_sarif import generic_sarif_token
 from amarna.rules.gatherer_rules.FunctionsReturningErrorsGatherer import (
     FunctionsReturningErrorsGatherer,
 )
@@ -28,7 +28,7 @@ class MustCheckReturnCodeRule:
                 idx = functions_returning_errors[function_name]
                 must_check = returned_list[idx].children[0]
 
-                sarif = generic_sarif_token(
+                sarif = create_result_token(
                     file_name,
                     self.RULE_NAME,
                     self.RULE_TEXT,
@@ -42,7 +42,7 @@ class MustCheckReturnCodeRule:
                     token = return_name.children[0]
                     if token in ["success", "exists"]:
 
-                        sarif = generic_sarif_token(
+                        sarif = create_result_token(
                             file_name,
                             "sucess-must-be-checked",
                             self.RULE_TEXT,

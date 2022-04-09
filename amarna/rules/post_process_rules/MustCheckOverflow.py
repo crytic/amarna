@@ -1,6 +1,5 @@
 from typing import Dict, Any, List
-
-from amarna.output_sarif import generic_sarif_token
+from amarna.Result import create_result_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
     RValueFunctionCallsGatherer,
@@ -44,7 +43,7 @@ class MustCheckOverflow:
                     # here we say that it must be checked
                     rule = self.RULE_TEXT
 
-                sarif = generic_sarif_token(
+                sarif = create_result_token(
                     file_name,
                     self.RULE_NAME,
                     rule,

@@ -1,5 +1,5 @@
 from typing import Dict, Any, List, Tuple
-from amarna.output_sarif import generic_sarif, PositionType
+from amarna.Result import create_result, PositionType
 
 from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
@@ -45,7 +45,7 @@ class UnusedFunctionsRule:
             if "starkware/cairo/common/" in file_name:
                 continue
 
-            sarif = generic_sarif(
+            sarif = create_result(
                 file_name,
                 self.RULE_NAME,
                 self.RULE_TEXT,

@@ -1,7 +1,8 @@
 import os
 import argparse
 from amarna.amarna import analyze_directory, analyze_file
-from amarna.output_sarif import create_sarif
+from amarna.Result import output_result
+from amarna.Result import SARIF_MODE, SUMMARY_MODE
 
 example_usage = """---------------\nUsage examples\n---------------
 Analyze a Cairo project in the current directory and export results to a file:
@@ -38,6 +39,10 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "-summary", "--summary", action="store_true", help="output summary"
+    )
+
+    parser.add_argument(
         "-png", "--png", action="store_true", help="save a png with the AST of a file"
     )
 
@@ -52,8 +57,13 @@ def main() -> None:
     else:
         results = analyze_file(filename, args.png)
 
+    mode = SARIF_MODE
+    if args.summary:
+        args.print = True
+        mode = SUMMARY_MODE
+
     if args.output or args.print:
-        create_sarif(results, args.output, args.print)
+        output_result(results, args.output, args.print, mode)
 
 
 if __name__ == "__main__":

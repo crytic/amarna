@@ -1,8 +1,7 @@
 from typing import Set, Optional, Any
 from lark import Tree, Token
 
-from amarna.output_sarif import generic_sarif
-
+from amarna.Result import create_result
 from amarna.rules.GenericRule import GenericRule
 
 
@@ -91,7 +90,7 @@ class UnusedArgumentRule(GenericRule):
         for arg in sorted(unused_arguments):
             # TODO (montyly): mypy complain about the next attributes accesses
             positions = (arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
-            sarif = generic_sarif(
+            sarif = create_result(
                 self.fname,
                 self.RULE_NAME,
                 self.RULE_TEXT,
