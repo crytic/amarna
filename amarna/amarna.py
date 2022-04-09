@@ -4,7 +4,7 @@ from typing import Any, List, Dict
 from pathlib import Path
 from lark import Lark, tree, exceptions
 
-from amarna.rules import all_rules_module, post_process_rules_module, all_gatherers_module
+from amarna.rules import gatherer_rules_module, local_rules_module, post_process_rules_module
 
 
 def make_png(t: tree.Tree, out_name: str) -> None:
@@ -55,9 +55,9 @@ class Amarna:
         # the different "gather" functions
         # Which return a GenericGatherType type (python generic)
         self.data: Dict[str, Any] = {}
-        self.rules = Amarna.load_classes_in_module(all_rules_module)
+        self.rules = Amarna.load_classes_in_module(local_rules_module)
         self.post_process_rules = Amarna.load_classes_in_module(post_process_rules_module)
-        self.gatherers = Amarna.load_classes_in_module(all_gatherers_module)
+        self.gatherers = Amarna.load_classes_in_module(gatherer_rules_module)
 
     def run_local_rules(
         self, filename: str, parsed_cairo_file: Any, png: bool = False
@@ -134,8 +134,9 @@ def analyze_file(fname: str, png: bool = False) -> List[Any]:
     Run analysis rules on a .cairo file.
     """
     amarna = Amarna()
-
-    return amarna.run_local_rules(fname, png)
+    parsed_cairo_file = amarna.parse_cairo_file(fname)
+    if parsed_cairo_file:
+        return amarna.run_local_rules(fname, parsed_cairo_file, png)
 
 
 if __name__ == "__main__":
