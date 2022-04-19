@@ -86,6 +86,14 @@ class UnusedArgumentRule(GenericRule):
                         if tree in struct.iter_subtrees():
                             return
 
+        for child in tree.children:
+            if child.data == "decorator_list":
+                for args in child.find_data("identifier_def"):
+                    decorator = args.children[0]
+                    if decorator in ["event",]:
+                        return
+
+
         # report unused arguments
         for arg in sorted(unused_arguments):
             # TODO (montyly): mypy complain about the next attributes accesses
