@@ -26,6 +26,16 @@ class DeadStoreRule(GenericRule):
             for args in allargs.find_data("identifier_def"):
                 implicits_and_arguments.append(str(args.children[0]))
 
+        # gather call template names
+        for allargs in tree.find_data("non_def_expr_assignment"):
+            for args in allargs.find_data("identifier_def"):
+                implicits_and_arguments.append(str(args.children[0]))
+
+        # gather with_attr names
+        for withattr in tree.find_data("code_element_with_attr"):
+            for args in withattr.find_data("identifier_def"):
+                implicits_and_arguments.append(str(args.children[0]))
+
         defines: Set[Token] = set()
         for main_child in tree.children:
             if main_child.data != "code_block":
