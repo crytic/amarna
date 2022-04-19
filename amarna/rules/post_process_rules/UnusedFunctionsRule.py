@@ -45,12 +45,12 @@ class UnusedFunctionsRule:
             if "starkware/cairo/common/" in file_name:
                 continue
 
-            sarif = create_result(
+            result = create_result(
                 file_name,
                 self.RULE_NAME,
                 self.RULE_TEXT,
                 position,
             )
-            results.append(sarif)
+            results.append(result)
 
         return results

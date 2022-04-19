@@ -18,6 +18,7 @@ class GenericGatherer(Visitor, Generic[GenericGatherType]):
         # pylint: disable=attribute-defined-outside-init
         self.fname = fname
         self.results: GenericGatherType = []  # type: ignore
+        self.original_tree = tree
         self.visit(tree)
         return self.get_gathered_data()
 
