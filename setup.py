@@ -11,6 +11,7 @@ setup(
     install_requires=[
         "lark",
     ],
+    license="AGPL-3.0",
     entry_points={
         "console_scripts": [
             "amarna=amarna.command_line:main",
