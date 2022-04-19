@@ -19,6 +19,9 @@ class UnknownDecoratorRule(GenericRule):
         "constructor",
         "l1_handler",
         "known_ap_change",
+        "event",
+        "raw_input",
+        "raw_output",
     ]
 
     def code_element_function(self, tree: Tree) -> None:
