@@ -7,6 +7,7 @@ setup(
     author="Trail of Bits",
     license="",
     packages=find_packages(),
+    package_data={"amarna": ["grammars/cairo.lark"]},
     install_requires=[
         "lark",
     ],
