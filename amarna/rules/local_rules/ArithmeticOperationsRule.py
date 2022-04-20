@@ -15,11 +15,15 @@ class ArithmeticOperationsRule(GenericRule):
     RULE_PREFIX = "arithmetic-"
 
     def expr_mul(self, tree: Tree) -> None:
-        result = create_result(self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree))
+        result = create_result(
+            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+        )
         self.results.append(result)
 
     def expr_div(self, tree: Tree) -> None:
-        result = create_result(self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree))
+        result = create_result(
+            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+        )
         self.results.append(result)
 
     def expr_add(self, tree: Tree) -> None:
@@ -27,7 +31,9 @@ class ArithmeticOperationsRule(GenericRule):
         if tree.children[0].data == "atom_reg":
             return
 
-        result = create_result(self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree))
+        result = create_result(
+            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+        )
         self.results.append(result)
 
     def expr_sub(self, tree: Tree) -> None:
@@ -35,5 +41,7 @@ class ArithmeticOperationsRule(GenericRule):
         if tree.children[0].data == "atom_reg":
             return
 
-        result = create_result(self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree))
+        result = create_result(
+            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+        )
         self.results.append(result)

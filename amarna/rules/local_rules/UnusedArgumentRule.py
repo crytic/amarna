@@ -90,9 +90,10 @@ class UnusedArgumentRule(GenericRule):
             if child.data == "decorator_list":
                 for args in child.find_data("identifier_def"):
                     decorator = args.children[0]
-                    if decorator in ["event",]:
+                    if decorator in [
+                        "event",
+                    ]:
                         return
-
 
         # report unused arguments
         for arg in sorted(unused_arguments):

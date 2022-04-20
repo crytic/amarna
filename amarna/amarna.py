@@ -1,8 +1,9 @@
 import inspect
 import os
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Union
 from pathlib import Path
-from lark import Lark, tree, exceptions
+from lark import Lark, Tree, tree, exceptions
+from amarna.Result import Result, ResultMultiplePositions
 
 from amarna.rules import gatherer_rules_module, local_rules_module, post_process_rules_module
 
@@ -61,7 +62,7 @@ class Amarna:
 
     def run_local_rules(
         self, filename: str, parsed_cairo_file: Any, png: bool = False
-    ) -> List[Dict[str, Any]]:
+    ) -> List[Union[Result, ResultMultiplePositions]]:
         """
         Run all local rules.
 
@@ -71,20 +72,20 @@ class Amarna:
             png_filename = os.path.basename(filename).split(".")[0] + ".png"
             make_png(parsed_cairo_file, png_filename)
 
-        results: List[Dict[str, Any]] = []
+        results = []
         for Rule in self.rules:
             results += Rule.run_rule(filename, parsed_cairo_file)
 
         return results
 
-    def run_gatherer_rules(self, filename, parsed_cairo_file) -> None:
+    def run_gatherer_rules(self, filename: str, parsed_cairo_file: Tree) -> None:
         """
         Run all gatherer rules.
         """
         for Gatherer in self.gatherers:
             self.data[Gatherer.GATHERER_NAME] = Gatherer.gather(filename, parsed_cairo_file)
 
-    def run_post_process_rules(self) -> List[Dict[str, Any]]:
+    def run_post_process_rules(self) -> List[Union[Result, ResultMultiplePositions]]:
         """
         Run all post-processing rules.
         """
@@ -93,7 +94,7 @@ class Amarna:
             results += Rule.run_rule(self.data)
         return results
 
-    def parse_cairo_file(self, filename: str):
+    def parse_cairo_file(self, filename: str) -> Union[Tree, None]:
         """
         Parse the cairo file
         """
@@ -129,7 +130,7 @@ def analyze_directory(rootdir: str) -> List[Any]:
     return all_results
 
 
-def analyze_file(fname: str, png: bool = False) -> List[Any]:
+def analyze_file(fname: str, png: bool = False) -> List[Union[Result, ResultMultiplePositions]]:
     """
     Run analysis rules on a .cairo file.
     """
@@ -137,6 +138,7 @@ def analyze_file(fname: str, png: bool = False) -> List[Any]:
     parsed_cairo_file = amarna.parse_cairo_file(fname)
     if parsed_cairo_file:
         return amarna.run_local_rules(fname, parsed_cairo_file, png)
+    return []
 
 
 if __name__ == "__main__":

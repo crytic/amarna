@@ -8,15 +8,15 @@ _module_dir = Path(__file__).resolve().parent
 TESTS_DIR = _module_dir
 
 
-def test_all():
+def test_all() -> None:
     for subdir, _dirs, files in os.walk(TESTS_DIR):
         for file in files:
             _test_single(file)
 
 
-def _test_single(filename):
+def _test_single(filename: str) -> None:
     FILE, ext = os.path.splitext(filename)
-    if ext != '.cairo':
+    if ext != ".cairo":
         return
 
     test_file = str(TESTS_DIR.joinpath(FILE + ext))
@@ -33,5 +33,4 @@ def _test_single(filename):
         print("Expected test result does not exist. Creating it.")
         print("at {}".format(expected_result))
         with open(expected_result, "w", encoding="utf8") as f:
-            expected = f.write(summary)
-
+            f.write(summary)

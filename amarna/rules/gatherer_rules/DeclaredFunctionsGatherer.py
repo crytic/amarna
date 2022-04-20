@@ -42,7 +42,6 @@ class DeclaredFunctionsGatherer(GenericGatherer):
                     if decorator in ["external", "view"]:
                         return
 
-
         for child in tree.children:
             if child.data == "identifier_def":
                 function_name = str(child.children[0])

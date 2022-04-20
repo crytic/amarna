@@ -9,6 +9,7 @@ import json
 # TODO (montyly): consider creating a namedtuple
 PositionType = Tuple[int, int, int, int]
 
+
 class Result:
     def __init__(self, filename: str, rule_name: str, text: str, position: PositionType) -> None:
         self.filename = filename
@@ -16,7 +17,7 @@ class Result:
         self.text = text
         self.position = position
 
-    def to_sarif(self):
+    def to_sarif(self) -> Dict:
         """
         Return a SARIF dictionary for a filename, rule, text description and code location.
         """
@@ -34,16 +35,18 @@ class Result:
             ],
         }
 
-    def to_summary(self):
+    def to_summary(self) -> str:
         short_name = os.path.basename(self.filename)
         return f"[{self.rule_name}] in {short_name}:{self.position[0]}:{self.position[1]}"
 
-    def __eq__(self, __o: object) -> bool:
-        return (
-            self.filename == __o.filename
-            and self.position == __o.position
-            and self.rule_name == __o.rule_name
-        )
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Result):
+            return (
+                self.filename == other.filename
+                and self.position == other.position
+                and self.rule_name == other.rule_name
+            )
+        return False
 
 
 class ResultMultiplePositions:
@@ -61,7 +64,7 @@ class ResultMultiplePositions:
         self.text = text
         self.position_list = position_list
 
-    def to_sarif(self):
+    def to_sarif(self) -> Dict:
         return {
             "ruleId": self.rule_name,
             "level": "warning",
@@ -95,7 +98,7 @@ class ResultMultiplePositions:
             ],
         }
 
-    def to_summary(self):
+    def to_summary(self) -> str:
         short_name = os.path.basename(self.filename)
         related_short_name = os.path.basename(self.related_filename)
         return f"[{self.rule_name}] {self.text} in {short_name}:{self.position_list[0][0]}:{self.position_list[0][1]} and {related_short_name}:{self.position_list[1][0]}:{self.position_list[1][1]}"
@@ -107,7 +110,7 @@ SARIF_MODE = "sarif_mode"
 SUMMARY_MODE = "summary_mode"
 
 
-def output_result(results: List[ResultTypes], fname: bool, print_output: bool, mode):
+def output_result(results: List[ResultTypes], fname: str, print_output: bool, mode: str) -> None:
     if mode == SARIF_MODE:
         create_sarif(results, fname, print_output)
 
@@ -121,15 +124,15 @@ def output_result(results: List[ResultTypes], fname: bool, print_output: bool, m
                 f.write(summary)
 
 
-def create_summary(results: List[ResultTypes]):
+def create_summary(results: List[ResultTypes]) -> str:
     return "\n".join(map(lambda res: res.to_summary(), results))
 
 
-def create_result(filename: str, rule_name: str, text: str, position: PositionType):
+def create_result(filename: str, rule_name: str, text: str, position: PositionType) -> Result:
     return Result(filename, rule_name, text, position)
 
 
-def create_result_token(filename: str, rule_name: str, text: str, token: Token):
+def create_result_token(filename: str, rule_name: str, text: str, token: Token) -> Result:
     return Result(filename, rule_name, text, token_positions(token))
 
 
@@ -139,7 +142,7 @@ def result_multiple_positions(
     rule_name: str,
     text: str,
     position_list: List[PositionType],
-):
+) -> ResultMultiplePositions:
     return ResultMultiplePositions(filename, related_filename, rule_name, text, position_list)
 
 

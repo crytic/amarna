@@ -1,5 +1,5 @@
-from typing import Dict, Any, List
-from amarna.Result import create_result_token
+from typing import Dict, List
+from amarna.Result import Result, create_result_token
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
     RValueFunctionCallsGatherer,
@@ -22,7 +22,7 @@ class MustCheckOverflow:
     # dictionary with function_name : index of the returned overflow variable
     OVERFLOW_FUNCTIONS = {"uint256_add": 1}
 
-    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
+    def run_rule(self, gathered_data: Dict) -> List[Result]:
 
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 
@@ -43,12 +43,12 @@ class MustCheckOverflow:
                     # here we say that it must be checked
                     rule = self.RULE_TEXT
 
-                sarif = create_result_token(
+                result = create_result_token(
                     file_name,
                     self.RULE_NAME,
                     rule,
                     must_check,
                 )
-                results.append(sarif)
+                results.append(result)
 
         return results

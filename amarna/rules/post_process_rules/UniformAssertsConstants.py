@@ -2,7 +2,7 @@ import re
 from typing import Dict, Any, List
 
 from lark import Token
-from amarna.Result import result_multiple_positions, getPosition
+from amarna.Result import ResultMultiplePositions, result_multiple_positions, getPosition
 
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 
@@ -23,7 +23,7 @@ class UniformAssertsConstants:
     RULE_TEXT = "This assertion uses the same constant differently [here](0) and [here](1)."
     RULE_NAME = "inconsistent-assert-constant"
 
-    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
+    def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
         # pylint: disable=too-many-locals
         function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
 
@@ -62,13 +62,13 @@ class UniformAssertsConstants:
                         # they are being used differently
                         if old_tree != arg_tree:
 
-                            sarif = result_multiple_positions(
+                            result = result_multiple_positions(
                                 file_name,
                                 old_filename,
                                 self.RULE_NAME,
                                 self.RULE_TEXT,
                                 [getPosition(arguments), getPosition(old_args)],
                             )
-                            results.append(sarif)
+                            results.append(result)
 
         return results

@@ -1,10 +1,10 @@
-from typing import Dict, List, Any
+from typing import Dict, List
 
 from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import (
     RValueFunctionCallsGatherer,
 )
 
-from amarna.Result import create_result_token
+from amarna.Result import Result, create_result_token
 
 # pylint: disable=too-few-public-methods
 class MustCheckCallerAddress:
@@ -23,11 +23,11 @@ class MustCheckCallerAddress:
     # dictionary with function_name : index of the caller address
     TARGET_FUNCTION = {"get_caller_address": 0}
 
-    def run_rule(self, gathered_data: Dict) -> List[Dict[str, Any]]:
+    def run_rule(self, gathered_data: Dict) -> List[Result]:
 
         function_calls = gathered_data[RValueFunctionCallsGatherer.GATHERER_NAME]
 
-        results: List[Dict[str, Any]] = []
+        results: List[Result] = []
         for call in function_calls:
             file_name, function_name, returned_list = call
 
