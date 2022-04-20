@@ -38,6 +38,9 @@ Analyze a single file `deleverage.cairo` and export results to a file:
  amarna deleverage.cairo -o deleverage.sarif
  ```
 
+Analyze a single file `code.cairo` and print a summary of the results:
+ amarna code.cairo -s
+
 Parse a Cairo file and output the recovered AST in `png`:
  ```bash
  amarna file.cairo -png
@@ -45,9 +48,9 @@ Parse a Cairo file and output the recovered AST in `png`:
 
 The full help menu is:
 ```
-usage: amarna [-h] [-p] [-o OUTPUT] [-png] -f
+usage: amarna [-h] [-p] [-o OUTPUT] [-summary] [-png] -f
 
-Analyze Cairo programs!
+Amarna is a static-analyzer for the Cairo programming language.
 
 positional arguments:
   -f                    the name of the .cairo file or directory with .cairo files to analyze
@@ -57,6 +60,7 @@ optional arguments:
   -p, --print           print output
   -o OUTPUT, --output OUTPUT
                         file to write the output results in sarif format
+  -summary, --summary   output summary
   -png, --png           save a png with the AST of a file
 ```
 
