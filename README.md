@@ -1,6 +1,6 @@
 # Amarna
 
-Amarna is a static-analyzer for the Cairo programming language.
+Amarna is a static-analyzer and linter for the Cairo programming language.
 
 ## Features
  - Finds code-smells and potential vulnerabilities in Cairo code
