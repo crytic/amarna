@@ -39,7 +39,7 @@ class DeclaredFunctionsGatherer(GenericGatherer):
             if child.data == "decorator_list":
                 for args in child.find_data("identifier_def"):
                     decorator = args.children[0]
-                    if decorator in ["external", "view"]:
+                    if decorator in ["external", "view", "constructor"]:
                         return
 
         for child in tree.children:
