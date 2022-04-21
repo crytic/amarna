@@ -1,7 +1,10 @@
 from typing import Dict, Any, List, Tuple
 from amarna.Result import Result, create_result, PositionType
 
-from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import DeclaredFunctionsGatherer
+from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
+    DeclaredFunctionsGatherer,
+    FunctionType,
+)
 from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
 from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
     FunctionsUsedAsCallbacksGatherer,
@@ -16,10 +19,11 @@ class UnusedFunctionsRule:
     RULE_TEXT = "This function is never called."
     RULE_NAME = "unused-function"
 
-    # TODO: handle interfaces and import shadowing other function names
+    # TODO: handle import shadowing other function names
+    UNUSED_FP_DECORATORS = ["external", "view", "constructor", "l1_handler"]
 
     def run_rule(self, gathered_data: Dict) -> List[Result]:
-        declared_functions: Dict[str, Tuple[PositionType, str]] = gathered_data[
+        declared_functions: List[FunctionType] = gathered_data[
             DeclaredFunctionsGatherer.GATHERER_NAME
         ]
         function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
@@ -27,29 +31,34 @@ class UnusedFunctionsRule:
         callbacks = gathered_data[FunctionsUsedAsCallbacksGatherer.GATHERER_NAME]
 
         results = []
+
+        all_called = []
         for call in function_calls:
             _, function_name, _ = call
-
-            if function_name in declared_functions:
-                del declared_functions[function_name]
+            all_called.append(function_name)
 
         for call in callbacks:
             _, function_name = call
+            all_called.append(function_name)
 
-            if function_name in declared_functions:
-                del declared_functions[function_name]
-        for unused in declared_functions:
-            (position, file_name) = declared_functions[unused]
+        for func in declared_functions:
+            # ignore if it was called
+            if func.name in all_called:
+                continue
 
             # ignore cairo standard lib functions
-            if "starkware/cairo/common/" in file_name:
+            if "starkware/cairo/common/" in func.file_location:
+                continue
+
+            # ignore if it has a decorator that means it is not supposed to be called directly
+            if any(decorator in self.UNUSED_FP_DECORATORS for decorator in func.decorators):
                 continue
 
             result = create_result(
-                file_name,
+                func.file_location,
                 self.RULE_NAME,
                 self.RULE_TEXT,
-                position,
+                func.position,
             )
             results.append(result)
 

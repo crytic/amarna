@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import Any, Optional, Dict, Union, Tuple
 from typing import List
 import os
@@ -5,9 +6,14 @@ from lark import Tree, Token
 import json
 
 
-# line, column, end_line, end_column
-# TODO (montyly): consider creating a namedtuple
-PositionType = Tuple[int, int, int, int]
+@dataclass
+class PositionType:
+    """Tracks the position in a file"""
+
+    start_line: int
+    start_col: int
+    end_line: int
+    end_col: int
 
 
 class Result:
@@ -37,7 +43,7 @@ class Result:
 
     def to_summary(self) -> str:
         short_name = os.path.basename(self.filename)
-        return f"[{self.rule_name}] in {short_name}:{self.position[0]}:{self.position[1]}"
+        return f"[{self.rule_name}] in {short_name}:{self.position.start_line}:{self.position.start_col}"
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Result):
@@ -101,7 +107,9 @@ class ResultMultiplePositions:
     def to_summary(self) -> str:
         short_name = os.path.basename(self.filename)
         related_short_name = os.path.basename(self.related_filename)
-        return f"[{self.rule_name}] {self.text} in {short_name}:{self.position_list[0][0]}:{self.position_list[0][1]} and {related_short_name}:{self.position_list[1][0]}:{self.position_list[1][1]}"
+        first = self.position_list[0]
+        second = self.position_list[1]
+        return f"[{self.rule_name}] {self.text} in {short_name}:{first.start_line}:{first.start_col} and {related_short_name}:{second.start_line}:{second.start_col}"
 
 
 ResultTypes = Union[Result, ResultMultiplePositions]
@@ -171,12 +179,11 @@ def sarif_region_from_position(position: PositionType) -> Dict[str, int]:
     """
     Return the sarif region field for a code location
     """
-    start_line, start_col, end_line, end_col = position
     return {
-        "startLine": start_line,
-        "startColumn": start_col,
-        "endLine": end_line,
-        "endColumn": end_col,
+        "startLine": position.start_line,
+        "startColumn": position.start_col,
+        "endLine": position.end_line,
+        "endColumn": position.end_col,
     }
 
 
@@ -187,7 +194,7 @@ def token_positions(token: Token) -> PositionType:
     """
     Get the file locations of a token: line, col, end_line, end_col
     """
-    return (
+    return PositionType(
         token.line,
         token.column,
         token.end_line,
@@ -200,4 +207,4 @@ def getPosition(tree: Tree) -> PositionType:
     Get the file locations of the tree: line, col, end_line, end_col
     """
     meta = tree.meta
-    return (meta.line, meta.column, meta.end_line, meta.end_column)
+    return PositionType(meta.line, meta.column, meta.end_line, meta.end_column)

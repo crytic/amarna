@@ -1,6 +1,6 @@
 from typing import Set
 from lark import Tree, Token
-from amarna.Result import create_result
+from amarna.Result import PositionType, create_result
 
 from amarna.rules.GenericRule import GenericRule
 
@@ -74,7 +74,7 @@ class UnusedImportRule(GenericRule):
         # report unused imports
         for arg in sorted(unused_imports):
             # print(f"\t{arg.value} imported at line {arg.line}")
-            positions = (arg.line, arg.column, arg.end_line, arg.end_column)
+            positions = PositionType(arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
             sarif = create_result(
                 self.fname,
                 self.RULE_NAME,

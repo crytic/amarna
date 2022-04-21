@@ -1,8 +1,19 @@
-from typing import Tuple, Dict, Optional
+from dataclasses import dataclass
+from typing import Optional, List
 
 from lark import Tree
 from amarna.rules.GenericGatherer import GenericGatherer
 from amarna.Result import getPosition, PositionType
+
+
+@dataclass
+class FunctionType:
+    """Represents a function declaration."""
+
+    name: str
+    position: PositionType
+    file_location: str
+    decorators: List[str]
 
 
 class DeclaredFunctionsGatherer(GenericGatherer):
@@ -14,16 +25,13 @@ class DeclaredFunctionsGatherer(GenericGatherer):
 
     def __init__(self) -> None:
         super().__init__()
-        self.declared_functions: Dict[str, Tuple[PositionType, str]] = {}
+        self.declared_functions: List[FunctionType] = []
 
-    def get_gathered_data(self) -> Dict[str, Tuple[PositionType, str]]:
+    def get_gathered_data(self) -> List[FunctionType]:
         return self.declared_functions
 
     def code_element_function(self, tree: Tree) -> None:
         function_name: Optional[str] = None
-
-        # TODO: add decorator list to function info, and filter these
-        # on the unused function rule instead.
 
         # find if the current tree is part of a @contract_interface
         # to ignore if unused in that case
@@ -34,13 +42,13 @@ class DeclaredFunctionsGatherer(GenericGatherer):
                         if tree in struct.iter_subtrees():
                             return
 
-        # find if the function has external or view decorator
+        # gather all decorators
+        decorators = []
         for child in tree.children:
             if child.data == "decorator_list":
                 for args in child.find_data("identifier_def"):
                     decorator = args.children[0]
-                    if decorator in ["external", "view", "constructor"]:
-                        return
+                    decorators.append(str(decorator))
 
         for child in tree.children:
             if child.data == "identifier_def":
@@ -49,8 +57,5 @@ class DeclaredFunctionsGatherer(GenericGatherer):
 
         assert function_name
 
-        # TODO: handle function name shadowing.
-        # if function_name in self.declared_functions:
-        #     print(f"[!] two functions declared with the same name: {function_name}")
-
-        self.declared_functions[function_name] = (getPosition(tree), self.fname)
+        func = FunctionType(function_name, getPosition(tree), self.fname, decorators)
+        self.declared_functions.append(func)
