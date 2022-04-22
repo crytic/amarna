@@ -8,3 +8,4 @@ from amarna.rules.gatherer_rules.RValueFunctionCallsGatherer import RValueFuncti
 from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
     FunctionsUsedAsCallbacksGatherer,
 )
+from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer
