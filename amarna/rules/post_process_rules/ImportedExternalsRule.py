@@ -10,11 +10,11 @@ from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer, ImportTyp
 
 class ImportedExternalRule:
     """
-    External declared functions will be imported even if not explicitely imported.
+    External declared functions will be imported even if not explicitly imported.
     """
 
-    RULE_TEXT = "[This](0) function will be imported by [here](1), even though it was not explicitely imported."
-    RULE_NAME = "external-function-implicitely-imported"
+    RULE_TEXT = "[This](0) function will be imported by [here](1), even though it was not explicitly imported."
+    RULE_NAME = "external-function-implicitly-imported"
 
     def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
         declared_functions: List[FunctionType] = gathered_data[

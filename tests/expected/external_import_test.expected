@@ -1,0 +1,3 @@
+[arithmetic-expr_add] in library.cairo:12:26
+[external-function-implicitly-imported] [This](0) function will be imported by [here](1), even though it was not explicitly imported. in library.cairo:16:1 and main.cairo:3:21
+[must-check-caller-address] in library.cairo:4:10
