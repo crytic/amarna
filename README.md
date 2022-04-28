@@ -39,8 +39,10 @@ Analyze a single file `deleverage.cairo` and export results to a file:
  ```
 
 Analyze a single file `code.cairo` and print a summary of the results:
+ ```bash
  amarna code.cairo -s
-
+ ```
+ 
 Parse a Cairo file and output the recovered AST in `png`:
  ```bash
  amarna file.cairo -png
