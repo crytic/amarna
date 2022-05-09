@@ -1,2 +1,2 @@
-lark
-pydot
+lark>=1.1.2
+pydot>=1.4.2

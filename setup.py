@@ -9,8 +9,8 @@ setup(
     packages=find_packages(),
     package_data={"amarna": ["grammars/cairo.lark"]},
     install_requires=[
-        "lark",
-        "pydot",
+        "lark>=1.1.2",
+        "pydot>=1.4.2",
     ],
     entry_points={
         "console_scripts": [
