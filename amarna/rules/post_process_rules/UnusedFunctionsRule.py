@@ -1,5 +1,5 @@
-from typing import Dict, Any, List, Tuple
-from amarna.Result import Result, create_result, PositionType
+from typing import Dict, List
+from amarna.Result import Result, create_result
 
 from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     DeclaredFunctionsGatherer,
