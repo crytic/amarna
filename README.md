@@ -46,6 +46,16 @@ Parse a Cairo file and output the recovered AST in `png`:
  amarna file.cairo -png
  ```
 
+Analyze a Cairo file with the unused_import rule:
+ ```bash
+ amarna file.cairo --rules=unused-imports
+ ```
+
+Analyze a Cairo file using all rules except the arithmetic-add rule:
+ ```bash
+ amarna file.cairo --except-rules=arithmetic-add
+ ```
+
 The full help menu is:
 ```
 usage: amarna [-h] [-p] [-o OUTPUT] [-summary] [-png] -f

@@ -6,6 +6,7 @@ from lark import Lark, Tree, tree, exceptions
 from amarna.Result import Result, ResultMultiplePositions
 
 from amarna.rules import gatherer_rules_module, local_rules_module, post_process_rules_module
+from amarna.rules.GenericRule import GenericRule
 
 
 def make_png(t: tree.Tree, out_name: str) -> None:
@@ -47,7 +48,25 @@ class Amarna:
     def load_classes_in_module(module: Any) -> List:
         return [cls() for (_, cls) in inspect.getmembers(module, inspect.isclass)]
 
-    def __init__(self) -> None:
+    @staticmethod
+    def get_all_rule_names() -> List[str]:
+        return list(
+            map(
+                lambda x: x.RULE_NAME,
+                Amarna.load_classes_in_module(local_rules_module)
+                + Amarna.load_classes_in_module(post_process_rules_module),
+            )
+        )
+
+    @staticmethod
+    def print_rule_names_and_descriptions() -> List[str]:
+        ruleset = Amarna.load_classes_in_module(local_rules_module) + Amarna.load_classes_in_module(
+            post_process_rules_module
+        )
+        for rule in ruleset:
+            print(rule.RULE_NAME)
+
+    def __init__(self, only_these_analysis_rules: List[str]) -> None:
         """
         Load Cairo grammar and analysis rules.
         """
@@ -56,8 +75,16 @@ class Amarna:
         # the different "gather" functions
         # Which return a GenericGatherType type (python generic)
         self.data: Dict[str, Any] = {}
-        self.rules = Amarna.load_classes_in_module(local_rules_module)
-        self.post_process_rules = Amarna.load_classes_in_module(post_process_rules_module)
+        self.rules: List[GenericRule] = [
+            rule
+            for rule in Amarna.load_classes_in_module(local_rules_module)
+            if rule.RULE_NAME in only_these_analysis_rules
+        ]
+        self.post_process_rules = [
+            rule
+            for rule in Amarna.load_classes_in_module(post_process_rules_module)
+            if rule.RULE_NAME in only_these_analysis_rules
+        ]
         self.gatherers = Amarna.load_classes_in_module(gatherer_rules_module)
 
     def run_local_rules(
@@ -66,7 +93,6 @@ class Amarna:
         """
         Run all local rules.
 
-        TODO: add argument to only run certain rule or exclude others.
         """
         if png:
             png_filename = os.path.basename(filename).split(".")[0] + ".png"
@@ -106,11 +132,11 @@ class Amarna:
             return None
 
 
-def analyze_directory(rootdir: str) -> List[Any]:
+def analyze_directory(rootdir: str, rule_names: List[str]) -> List[Any]:
     """
     Run rules in all .cairo files inside a directory.
     """
-    amarna = Amarna()
+    amarna = Amarna(rule_names)
 
     all_results = []
 
@@ -130,11 +156,13 @@ def analyze_directory(rootdir: str) -> List[Any]:
     return all_results
 
 
-def analyze_file(fname: str, png: bool = False) -> List[Union[Result, ResultMultiplePositions]]:
+def analyze_file(
+    fname: str, rules_names: List[str], png: bool = False
+) -> List[Union[Result, ResultMultiplePositions]]:
     """
     Run analysis rules on a .cairo file.
     """
-    amarna = Amarna()
+    amarna = Amarna(rules_names)
     parsed_cairo_file = amarna.parse_cairo_file(fname)
     if parsed_cairo_file:
         return amarna.run_local_rules(fname, parsed_cairo_file, png)

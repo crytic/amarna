@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from amarna.amarna import analyze_directory, analyze_file
+from amarna.amarna import Amarna, analyze_directory, analyze_file
 from amarna.Result import create_summary
 
 _module_dir = Path(__file__).resolve().parent
@@ -39,13 +39,16 @@ def _test_single(filename: str) -> None:
         with open(expected_result, "w", encoding="utf8") as f:
             f.write(summary)
 
+
 def _test_directory(filename: str) -> None:
     if not os.path.isdir(filename):
         return
 
     test_name = os.path.basename(filename)
 
-    results = analyze_directory(filename)
+    all_rules = Amarna.get_all_rule_names()
+
+    results = analyze_directory(filename, all_rules)
     summary = create_summary(results)
 
     expected_result = str(TESTS_DIR.joinpath("expected", test_name + ".expected"))
