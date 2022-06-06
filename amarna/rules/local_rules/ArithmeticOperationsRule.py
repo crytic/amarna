@@ -20,7 +20,7 @@ class MulArithmeticOperationsRule(ArithmeticOperationsRule):
 
     def expr_mul(self, tree: Tree) -> None:
         result = create_result(
-            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+            self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree)
         )
         self.results.append(result)
 
@@ -30,7 +30,7 @@ class DivArithmeticOperationsRule(ArithmeticOperationsRule):
 
     def expr_div(self, tree: Tree) -> None:
         result = create_result(
-            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+            self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree)
         )
         self.results.append(result)
 
@@ -44,7 +44,7 @@ class AddArithmeticOperationsRule(ArithmeticOperationsRule):
             return
 
         result = create_result(
-            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+            self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree)
         )
         self.results.append(result)
 
@@ -58,6 +58,6 @@ class SubArithmeticOperationsRule(ArithmeticOperationsRule):
             return
 
         result = create_result(
-            self.fname, self.RULE_PREFIX + tree.data, self.RULE_TEXT, getPosition(tree)
+            self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree)
         )
         self.results.append(result)

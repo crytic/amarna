@@ -3,14 +3,15 @@ from pathlib import Path
 
 from amarna.amarna import Amarna, analyze_directory, analyze_file
 from amarna.Result import create_summary
+from amarna.command_line import filter_results_from_disable
 
 _module_dir = Path(__file__).resolve().parent
 TESTS_DIR = _module_dir
-
+TESTS_DIR_STR = str(TESTS_DIR)
 
 def test_all() -> None:
     for subdir, _dirs, files in os.walk(TESTS_DIR):
-        if TESTS_DIR == subdir:
+        if TESTS_DIR_STR == subdir:
             for file in files:
                 _test_single(file)
 
@@ -24,7 +25,12 @@ def _test_single(filename: str) -> None:
         return
 
     test_file = str(TESTS_DIR.joinpath(FILE + ext))
-    results = analyze_file(test_file)
+
+    all_rules = Amarna.get_all_rule_names()
+
+    results = analyze_file(test_file, all_rules)
+    results = filter_results_from_disable(results)
+
     summary = create_summary(results)
 
     expected_result = str(TESTS_DIR.joinpath("expected", FILE + ".expected"))
