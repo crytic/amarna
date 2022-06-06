@@ -58,7 +58,7 @@ Analyze a Cairo file using all rules except the arithmetic-add rule:
 
 The full help menu is:
 ```
-usage: amarna [-h] [-p] [-o OUTPUT] [-summary] [-png] -f
+usage: amarna [-h] [-p] [-o OUTPUT] [-s] [-png] [-rules RULES] [-exclude-rules EXCLUDE_RULES] [-show-rules] [-disable-inline] -f
 
 Amarna is a static-analyzer for the Cairo programming language.
 
@@ -70,8 +70,17 @@ optional arguments:
   -p, --print           print output
   -o OUTPUT, --output OUTPUT
                         file to write the output results in sarif format
-  -summary, --summary   output summary
+  -s, -summary, --summary
+                        output summary
   -png, --png           save a png with the AST of a file
+  -rules RULES, --rules RULES
+                        Only run this set of rules. Enter rule names comma-separated, e.g., dead-store,unused-arguments
+  -exclude-rules EXCLUDE_RULES, --exclude-rules EXCLUDE_RULES
+                        Exclude these rules from the analysis. Enter rule names comma-separated, e.g., dead-store,unused-arguments
+  -show-rules, --show-rules
+                        Show all supported rules and descriptions.
+  -disable-inline, --disable-inline
+                        Disable rules with inline comments. The comments should be the first line and of the form: # amarna: disable=rulename1,rulename2
 ```
 
 ## SARIF file format
@@ -95,6 +104,47 @@ Examples of these are:
  - local rules: find all arithmetic operations in a file
  - gatherer rules: gather all declared functions, and called functions
  - post-process rules: find unused functions using the gathered data, i.e., functions that were declared but never called.
+
+
+## Rule allowlist, denylist and inline comments
+
+### Rule names
+Obtain the names of the currently implemented rules with:
+```bash
+ amarna --show-rules .
+```
+
+### Rule allowlist
+Run amarna with a defined set of rules using
+```bash
+ amarna --rules=rule1,rule2 .
+```
+
+The following command will only run the `unused-imports` rule and print the summary result
+```bash
+ amarna --rules=unused-imports . -s
+```
+
+### Rule denylist
+Run amarna with all rules except a defined set of rules using
+```bash
+ amarna --exclude-rules=arithmetic-add,arithmetic-sub . -s
+```
+
+### Inline rule disabling comments
+You can change the first line of a cairo file to disable a specific rule set on that file.
+For example, adding the line
+```python
+# amarna: disable=arithmetic-div,arithmetic-sub,arithmetic-mul,arithmetic-add
+```
+as the first line of `file.cairo` and running amarna with
+```bash
+amarna directory/ --disable-inline -s
+```
+will not report any arithmetic rule to the `file.cairo` file.
+
+
+
 
 ----
 
