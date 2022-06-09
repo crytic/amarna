@@ -7,5 +7,3 @@
 [arithmetic-mul] in disable.cairo:73:9
 [arithmetic-mul] in disable.cairo:73:35
 [arithmetic-sub] in disable.cairo:58:14
-[unused-arguments] in disable.cairo:79:25
-[unused-arguments] in disable.cairo:94:9

@@ -1,4 +1,4 @@
-# amarna: disable=unused-imports,unused-arguments,
+# amarna: disable=unused-imports,unused-arguments
 from services.perpetual.cairo.definitions.perpetual_error_code import PerpetualErrorCode
 from services.perpetual.cairo.order.limit_order import LimitOrder
 from starkware.cairo.common.cairo_builtins import HashBuiltin as hashstuff, ASD as rewwerw
