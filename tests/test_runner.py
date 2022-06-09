@@ -9,6 +9,7 @@ _module_dir = Path(__file__).resolve().parent
 TESTS_DIR = _module_dir
 TESTS_DIR_STR = str(TESTS_DIR)
 
+
 def test_all() -> None:
     for subdir, _dirs, files in os.walk(TESTS_DIR):
         if TESTS_DIR_STR == subdir:
