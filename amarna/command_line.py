@@ -28,7 +28,7 @@ Analyze a Cairo file using all rules except the arithmetic-add rule:
 
 def parse_comma_sep_strings(s: str) -> List[str]:
     if s:
-        return [token.strip() for token in s.split(",")]
+        return [token.strip() for token in s.split(",") if token.strip()]
     else:
         return []
 
@@ -67,7 +67,7 @@ def filter_results_from_disable(
                 first_line = f.readline().strip()
                 first_lines_per_file[result.filename] = first_line
 
-        if disable_token not in first_line:
+        if not first_line.startswith(disable_token):
             new_results.append(result)
             continue
 
