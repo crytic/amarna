@@ -6,13 +6,12 @@ from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     FunctionType,
 )
 
-
 class StorageVarCollisionRule:
     """
     Storage variable is declared multiple times across files.
     """
 
-    RULE_TEXT = "[This](0) storage variable will is also declared [here](1)."
+    RULE_TEXT = "[This](0) storage variable is also declared [here](1)."
     RULE_NAME = "storage-var-collision"
 
     def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
