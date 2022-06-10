@@ -6,6 +6,7 @@ from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     FunctionType,
 )
 
+
 class StorageVarCollisionRule:
     """
     Storage variable is declared multiple times across files.
@@ -20,24 +21,23 @@ class StorageVarCollisionRule:
         ]
 
         results = []
+        seen = {}
+        for func in declared_functions:
+            if "storage_var" in func.decorators:
+                if func.name in seen:
+                    seen[func.name].append(func)
+                else:
+                    seen[func.name] = [func]
 
-        storage_vars = filter(lambda func: "storage_var" in func.decorators, declared_functions)
-
-        for func in storage_vars:
-            for other_func in storage_vars:
-
-                # do not flag the same declaration
-                if other_func == func:
-                    continue
-
-                if func.name == other_func.name:
+        for name in seen:
+            if len(seen[name]) > 1:
+                for duplicate in seen[name][1:]:
                     result = result_multiple_positions(
-                        func.file_location,
-                        other_func.file_location,
+                        seen[name][0].file_location,
+                        duplicate.file_location,
                         self.RULE_NAME,
                         self.RULE_TEXT,
-                        [func.position, other_func.position],
+                        [seen[name][0].position, duplicate.position],
                     )
                     results.append(result)
-
         return results
