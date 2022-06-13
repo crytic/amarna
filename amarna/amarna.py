@@ -126,6 +126,7 @@ class Amarna:
         """
         try:
             with open(filename, "r", encoding="utf8") as f:
+                # the cairo grammar requires a newline at the end
                 return self.parser.parse(f.read() + "\n", start="cairo_file")
         except exceptions.UnexpectedCharacters as e:
             print(f"Could not parse {filename}: {e}")
