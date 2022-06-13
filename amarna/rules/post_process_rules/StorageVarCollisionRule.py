@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Dict, List
 from amarna.Result import ResultMultiplePositions, result_multiple_positions
 
@@ -21,13 +22,10 @@ class StorageVarCollisionRule:
         ]
 
         results = []
-        seen = {}
+        seen = defaultdict(list)
         for func in declared_functions:
             if "storage_var" in func.decorators:
-                if func.name in seen:
-                    seen[func.name].append(func)
-                else:
-                    seen[func.name] = [func]
+                seen[func.name].append(func)
 
         for name in seen:
             if len(seen[name]) > 1:
