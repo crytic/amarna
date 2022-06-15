@@ -24,7 +24,7 @@ Amarna is a static-analyzer and linter for the Cairo programming language.
 | 8   | Dead stores                 | Variables that are assigned values but not used before a return statement                                                 | Info    | Medium    |
 | 9   | Unchecked overflows         | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
 | 10  | Caller address return value | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
-
+| 11  | Storage variable collision  | Multiple `@storage_var` with the same name.                                                                               | Info    | High      |
 
 
 ## Usage
