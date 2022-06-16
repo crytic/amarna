@@ -9,6 +9,7 @@ from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCall
 from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
     FunctionsUsedAsCallbacksGatherer,
 )
+from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer, ImportType
 
 # pylint: disable=too-few-public-methods
 class UnusedFunctionsRule:
@@ -30,6 +31,8 @@ class UnusedFunctionsRule:
 
         callbacks = gathered_data[FunctionsUsedAsCallbacksGatherer.GATHERER_NAME]
 
+        import_stmts: List[ImportType] = gathered_data[ImportGatherer.GATHERER_NAME]
+
         results = []
 
         all_called = []
@@ -40,6 +43,14 @@ class UnusedFunctionsRule:
         for call in callbacks:
             _, function_name = call
             all_called.append(function_name)
+
+        # replace with actual function name if alias
+        for imp in import_stmts:
+            if not imp.alias_name:
+                continue
+            if imp.alias_name in all_called:
+                all_called.remove(imp.alias_name)
+                all_called.append(imp.import_name)
 
         for func in declared_functions:
             # ignore if it was called
