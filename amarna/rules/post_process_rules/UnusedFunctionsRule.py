@@ -5,8 +5,12 @@ from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     DeclaredFunctionsGatherer,
     FunctionType,
 )
-from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
+from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import (
+    AllFunctionCallsGatherer,
+    FunctionCallType,
+)
 from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
+    CallbackFunctionType,
     FunctionsUsedAsCallbacksGatherer,
 )
 from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer, ImportType
@@ -27,9 +31,13 @@ class UnusedFunctionsRule:
         declared_functions: List[FunctionType] = gathered_data[
             DeclaredFunctionsGatherer.GATHERER_NAME
         ]
-        function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
+        function_calls: List[FunctionCallType] = gathered_data[
+            AllFunctionCallsGatherer.GATHERER_NAME
+        ]
 
-        callbacks = gathered_data[FunctionsUsedAsCallbacksGatherer.GATHERER_NAME]
+        callbacks: List[CallbackFunctionType] = gathered_data[
+            FunctionsUsedAsCallbacksGatherer.GATHERER_NAME
+        ]
 
         import_stmts: List[ImportType] = gathered_data[ImportGatherer.GATHERER_NAME]
 
@@ -37,12 +45,10 @@ class UnusedFunctionsRule:
 
         all_called = []
         for call in function_calls:
-            _, function_name, _ = call
-            all_called.append(function_name)
+            all_called.append(call.function_name)
 
         for call in callbacks:
-            _, function_name = call
-            all_called.append(function_name)
+            all_called.append(call.function_name)
 
         # replace with actual function name if alias
         for imp in import_stmts:

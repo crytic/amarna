@@ -1,10 +1,13 @@
 import re
-from typing import Dict, Any, List
+from typing import Dict, List
 
 from lark import Token
 from amarna.Result import ResultMultiplePositions, result_multiple_positions, getPosition
 
-from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import AllFunctionCallsGatherer
+from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import (
+    AllFunctionCallsGatherer,
+    FunctionCallType,
+)
 
 UPPER_CASE_PATTERN = re.compile("^[A-Z_]{2,}$")
 
@@ -25,17 +28,17 @@ class UniformAssertsConstants:
 
     def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
         # pylint: disable=too-many-locals
-        function_calls = gathered_data[AllFunctionCallsGatherer.GATHERER_NAME]
+        function_calls: List[FunctionCallType] = gathered_data[
+            AllFunctionCallsGatherer.GATHERER_NAME
+        ]
 
         results = []
         constant_uses = {}
 
         for call in function_calls:
-            file_name, function_name, arguments = call
+            if "assert" in call.function_name:
 
-            if "assert" in function_name:
-
-                for arg_tree in arguments.children:
+                for arg_tree in call.arguments.children:
                     # get all tokens in the argument that are a constant
                     argument_tokens = sorted(
                         list(
@@ -54,7 +57,7 @@ class UniformAssertsConstants:
                     if constants_key not in constant_uses:
                         # when we haven't seen these constants being used,
                         # add their argument tree and the current filename to the dictionary
-                        constant_uses[constants_key] = (arg_tree, arguments, file_name)
+                        constant_uses[constants_key] = (arg_tree, call.arguments, call.file_name)
 
                     else:
                         old_tree, old_args, old_filename = constant_uses[constants_key]
@@ -63,11 +66,11 @@ class UniformAssertsConstants:
                         if old_tree != arg_tree:
 
                             result = result_multiple_positions(
-                                file_name,
+                                call.file_name,
                                 old_filename,
                                 self.RULE_NAME,
                                 self.RULE_TEXT,
-                                [getPosition(arguments), getPosition(old_args)],
+                                [getPosition(call.arguments), getPosition(old_args)],
                             )
                             results.append(result)
 

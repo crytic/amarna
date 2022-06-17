@@ -1,9 +1,19 @@
-from typing import Tuple, Any, List
+from typing import List, Union
+from dataclasses import dataclass
 
 from lark import tree
+from amarna.Result import PositionType, getPosition
 from amarna.rules.GenericGatherer import GenericGatherer
 
-FunctionCallType = Tuple[str, str, Any]
+
+@dataclass
+class FunctionCallType:
+    """Represents a function call."""
+
+    file_name: str
+    function_name: str
+    position: PositionType
+    arguments: Union[str, tree.Tree]
 
 
 class AllFunctionCallsGatherer(GenericGatherer[list]):
@@ -26,6 +36,5 @@ class AllFunctionCallsGatherer(GenericGatherer[list]):
         function_name: str = func_id.children[0].value  # type: ignore
         arguments = func.children[-1]
 
-        tup: Tuple[str, str, Any] = (self.fname, function_name, arguments)
-
-        self.function_calls.append(tup)
+        function_call = FunctionCallType(self.fname, function_name, getPosition(func), arguments)
+        self.function_calls.append(function_call)
