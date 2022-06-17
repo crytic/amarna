@@ -49,6 +49,8 @@ decorator_list: (decorator _NEWLINE*)*
 ?unary: pow
       | "&" unary                             -> unary_addressof
       | "-" unary                             -> unary_neg
+      | "new" unary                           -> unary_new_operator
+
 ?pow: atom
     | atom _DBL_STAR notes pow -> expr_pow
 identifier: IDENTIFIER ("." IDENTIFIER)*
