@@ -1,22 +1,33 @@
+from dataclasses import dataclass
 from typing import Tuple, List
 
 from lark import Tree
+from amarna.Result import PositionType, getPosition
 
 from amarna.rules.GenericGatherer import GenericGatherer
 
 
+@dataclass
+class CallbackFunctionType:
+    """Represents a function callback."""
+
+    file_name: str
+    function_name: str
+    position: PositionType
+
+
 class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
     """
-    Gather all function that are used as callbacks.
+    Gather all functions that are used as callbacks.
     """
 
     GATHERER_NAME = "FunctionsUsedAsCallbacks"
 
     def __init__(self) -> None:
         super().__init__()
-        self.function_calls: List[Tuple[str, str]] = []
+        self.function_calls: List[CallbackFunctionType] = []
 
-    def get_gathered_data(self) -> List[Tuple[str, str]]:
+    def get_gathered_data(self) -> List[CallbackFunctionType]:
         return self.function_calls
 
     def function_call(self, tree: Tree) -> None:
@@ -49,6 +60,6 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
         elif function_name == "get_label_location":
             for identifier in tree.find_data("atom_identifier"):
                 token = identifier.children[0].children[0]
-                tup = (self.fname, str(token))
 
-                self.function_calls.append(tup)
+                callback = CallbackFunctionType(self.fname, str(token), getPosition(token))
+                self.function_calls.append(callback)
