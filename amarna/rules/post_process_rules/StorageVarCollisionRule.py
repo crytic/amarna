@@ -6,6 +6,7 @@ from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     DeclaredFunctionsGatherer,
     FunctionType,
 )
+from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer, ImportType
 
 
 class StorageVarCollisionRule:
@@ -21,11 +22,25 @@ class StorageVarCollisionRule:
             DeclaredFunctionsGatherer.GATHERER_NAME
         ]
 
+        import_stmts: List[ImportType] = gathered_data[ImportGatherer.GATHERER_NAME]
+
         results = []
         seen = defaultdict(list)
         for func in declared_functions:
             if "storage_var" in func.decorators:
-                seen[func.name].append(func)
+                seen[(func.file_location, func.name)].append(func)
+
+                files_marked = []
+                for imp in import_stmts:
+                    # check if there is any import from the location
+                    # of the storage variable
+                    if func.file_location.endswith(imp.where_imported):
+                        # do not flag the same file repeatedly
+                        if imp.file_location in files_marked:
+                            continue
+
+                        files_marked.append(imp.file_location)
+                        seen[(imp.file_location, func.name)].append(func)
 
         for name in seen:
             if len(seen[name]) > 1:
@@ -37,5 +52,7 @@ class StorageVarCollisionRule:
                         self.RULE_TEXT,
                         [seen[name][0].position, duplicate.position],
                     )
-                    results.append(result)
+                    # do not add findings twice
+                    if result.position_list not in (r.position_list for r in results):
+                        results.append(result)
         return results
