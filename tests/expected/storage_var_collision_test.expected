@@ -1,3 +1,3 @@
-[arithmetic-add] in b.cairo:13:19
 [arithmetic-add] in a.cairo:13:19
-[storage-var-collision] [This](0) storage variable is also declared [here](1). in b.cairo:5:1 and a.cairo:5:1
+[arithmetic-add] in b.cairo:13:19
+[storage-var-collision] [This](0) storage variable is also declared [here](1). in a.cairo:5:1 and b.cairo:5:1
