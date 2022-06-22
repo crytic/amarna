@@ -58,7 +58,7 @@ class UnusedFunctionsRule:
                 all_called.remove(imp.alias_name)
                 all_called.append(imp.import_name)
 
-        for func in declared_functions:
+        for func in sorted(declared_functions, key=lambda x: x.name):
             # ignore if it was called
             if func.name in all_called:
                 continue
