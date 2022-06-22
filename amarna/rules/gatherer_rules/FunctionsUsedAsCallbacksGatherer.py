@@ -54,12 +54,12 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
                     "Function call path not implemented in amarna, please open an issue"
                 )
 
-            tup = (self.fname, str(token))
-            self.function_calls.append(tup)
+            callback = CallbackFunctionType(self.fname, str(token), getPosition(tree))
+            self.function_calls.append(callback)
 
         elif function_name == "get_label_location":
             for identifier in tree.find_data("atom_identifier"):
                 token = identifier.children[0].children[0]
 
-                callback = CallbackFunctionType(self.fname, str(token), getPosition(token))
+                callback = CallbackFunctionType(self.fname, str(token), getPosition(tree))
                 self.function_calls.append(callback)
