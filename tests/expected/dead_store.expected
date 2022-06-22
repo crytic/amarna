@@ -1,2 +1,3 @@
 [dead-store] in dead_store.cairo:17:5
 [dead-store] in dead_store.cairo:3:11
+[unused-function] in dead_store.cairo:1:1

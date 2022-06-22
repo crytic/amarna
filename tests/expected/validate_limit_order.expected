@@ -12,3 +12,6 @@
 [unused-imports] in validate_limit_order.cairo:4:63
 [unused-imports] in validate_limit_order.cairo:3:66
 [unused-imports] in validate_limit_order.cairo:3:84
+[unused-function] in validate_limit_order.cairo:26:1
+[unused-function] in validate_limit_order.cairo:78:1
+[unused-function] in validate_limit_order.cairo:83:1
