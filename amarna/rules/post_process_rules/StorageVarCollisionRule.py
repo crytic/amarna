@@ -14,7 +14,7 @@ class StorageVarCollisionRule:
     Storage variable is declared multiple times across files.
     """
 
-    RULE_TEXT = "[This](0) storage variable is also declared [here](1)."
+    RULE_TEXT = "[This](0) storage variable is also declared [here](1), shadowing it and causing both storage variables to always be equal."
     RULE_NAME = "storage-var-collision"
 
     def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
