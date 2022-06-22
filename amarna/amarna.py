@@ -153,7 +153,10 @@ def analyze_directory(rootdir: str, rule_names: List[str]) -> List[Any]:
                 all_results += amarna.run_local_rules(fname, parsed_cairo_file)
                 amarna.run_gatherer_rules(fname, parsed_cairo_file)
 
-    all_results += amarna.run_post_process_rules()
+    try:
+        all_results += amarna.run_post_process_rules()
+    except Exception:
+        print(f"Could not find any cairo files in {rootdir}")
     return all_results
 
 
