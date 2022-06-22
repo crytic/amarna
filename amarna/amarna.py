@@ -166,7 +166,9 @@ def analyze_file(
     amarna = Amarna(rules_names)
     parsed_cairo_file = amarna.parse_cairo_file(fname)
     if parsed_cairo_file:
-        return sorted(amarna.run_local_rules(fname, parsed_cairo_file, png), key=lambda x: x.to_summary())
+        return sorted(
+            amarna.run_local_rules(fname, parsed_cairo_file, png), key=lambda x: x.to_summary()
+        )
     return []
 
 
