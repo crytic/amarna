@@ -1,3 +1,4 @@
 [arithmetic-add] in callbacks.cairo:8:18
 [arithmetic-sub] in callbacks.cairo:8:18
 [unused-arguments] in callbacks.cairo:1:49
+[unused-function] in callbacks.cairo:1:1
