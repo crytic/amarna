@@ -54,6 +54,7 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
                     "Function call path not implemented in amarna, please open an issue"
                 )
 
+            # add to the gatherer data
             callback = CallbackFunctionType(self.fname, str(token), getPosition(tree))
             self.function_calls.append(callback)
 
@@ -61,5 +62,6 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
             for identifier in tree.find_data("atom_identifier"):
                 token = identifier.children[0].children[0]
 
+                # add to the gatherer data
                 callback = CallbackFunctionType(self.fname, str(token), getPosition(tree))
                 self.function_calls.append(callback)
