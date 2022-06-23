@@ -18,3 +18,13 @@ func test_mint(to, amount):
     mint_internal(to, amount)
     return ()
 end
+
+@view
+func test2():
+    return ()
+end
+
+@l1_handler
+func test3():
+    return ()
+end
