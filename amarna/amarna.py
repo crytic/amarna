@@ -154,7 +154,7 @@ def analyze_directory(rootdir: str, rule_names: List[str]) -> List[Any]:
                 amarna.run_gatherer_rules(fname, parsed_cairo_file)
 
     all_results += amarna.run_post_process_rules()
-    return all_results
+    return sorted(all_results, key=lambda x: x.to_summary())
 
 
 def analyze_file(
@@ -169,8 +169,8 @@ def analyze_file(
     if parsed_cairo_file:
         all_results += amarna.run_local_rules(fname, parsed_cairo_file, png)
         amarna.run_gatherer_rules(fname, parsed_cairo_file)
-    all_results += amarna.run_post_process_rules()
-    return all_results
+        all_results += amarna.run_post_process_rules()
+    return sorted(all_results, key=lambda x: x.to_summary())
 
 
 if __name__ == "__main__":
