@@ -1,0 +1,3 @@
+[arithmetic-add] in main.cairo:5:29
+[must-check-caller-address] in main.cairo:3:10
+[unenforced-view] in main.cairo:5:17
