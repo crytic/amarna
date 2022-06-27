@@ -25,7 +25,7 @@ Amarna is a static-analyzer and linter for the Cairo programming language.
 | 9   | Unchecked overflows         | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
 | 10  | Caller address return value | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
 | 11  | Storage variable collision  | Multiple `@storage_var` with the same name.                                                                               | Warning | High      |
-| 12  | Implicit function import    | Function with decorator `@external, @view, @l1_handler` that are being implicitly imported.                               | Info    | High      |
+| 12  | Implicit function import    | Function with decorator `@external, @view, @l1_handler` that is being implicitly imported.                                | Info    | High      |
 
 
 ## Usage
