@@ -9,6 +9,9 @@
 [arithmetic-sub] in validate_limit_order.cairo:57:14
 [unused-arguments] in validate_limit_order.cairo:78:25
 [unused-arguments] in validate_limit_order.cairo:93:9
+[unused-function] in validate_limit_order.cairo:26:1
+[unused-function] in validate_limit_order.cairo:78:1
+[unused-function] in validate_limit_order.cairo:83:1
 [unused-imports] in validate_limit_order.cairo:3:66
 [unused-imports] in validate_limit_order.cairo:3:84
 [unused-imports] in validate_limit_order.cairo:4:63
