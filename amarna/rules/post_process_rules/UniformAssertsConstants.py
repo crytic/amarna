@@ -66,8 +66,7 @@ class UniformAssertsConstants:
                         if old_tree != arg_tree:
 
                             result = result_multiple_positions(
-                                call.file_name,
-                                old_filename,
+                                [call.file_name, old_filename],
                                 self.RULE_NAME,
                                 self.RULE_TEXT,
                                 [getPosition(call.arguments), getPosition(old_args)],

@@ -60,12 +60,16 @@ def filter_results_from_disable(
 
     new_results = []
     for result in results:
-        if result.filename in first_lines_per_file:
-            first_line = first_lines_per_file[result.filename]
+        if isinstance(result, Result):
+            filename = result.filename
+        elif isinstance(result, ResultMultiplePositions):
+            filename = result.filenames[0]
+        if filename in first_lines_per_file:
+            first_line = first_lines_per_file[filename]
         else:
-            with open(result.filename, "r", encoding="utf8") as f:
+            with open(filename, "r", encoding="utf8") as f:
                 first_line = f.readline().strip()
-                first_lines_per_file[result.filename] = first_line
+                first_lines_per_file[filename] = first_line
 
         if not first_line.startswith(disable_token):
             new_results.append(result)

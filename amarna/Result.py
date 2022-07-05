@@ -58,19 +58,28 @@ class Result:
 class ResultMultiplePositions:
     def __init__(
         self,
-        filename: str,
-        related_filename: str,
+        filenames: str,
         rule_name: str,
         text: str,
         position_list: List[PositionType],
     ) -> None:
-        self.filename = filename
-        self.related_filename = related_filename
+        assert len(filenames) == len(position_list)
+        self.filenames = filenames
         self.rule_name = rule_name
         self.text = text
         self.position_list = position_list
 
     def to_sarif(self) -> Dict:
+        related_location_list = [
+            {
+                "id": idx,
+                "physicalLocation": {
+                    "artifactLocation": {"uri": "file://" + self.filenames[idx], "index": 0},
+                    "region": sarif_region_from_position(self.position_list[idx]),
+                },
+            }
+            for idx in enumerate(self.filenames)
+        ]
         return {
             "ruleId": self.rule_name,
             "level": "warning",
@@ -78,38 +87,27 @@ class ResultMultiplePositions:
             "locations": [
                 {
                     "physicalLocation": {
-                        "artifactLocation": {"uri": "file://" + self.filename, "index": 0},
+                        "artifactLocation": {"uri": "file://" + self.filenames[0], "index": 0},
                         "region": sarif_region_from_position(self.position_list[0]),
                     },
                 }
             ],
-            "relatedLocations": [
-                {
-                    "id": 0,
-                    "physicalLocation": {
-                        "artifactLocation": {"uri": "file://" + self.filename, "index": 0},
-                        "region": sarif_region_from_position(self.position_list[0]),
-                    },
-                },
-                {
-                    "id": 1,
-                    "physicalLocation": {
-                        "artifactLocation": {
-                            "uri": "file://" + self.related_filename,
-                            "index": 0,
-                        },
-                        "region": sarif_region_from_position(self.position_list[1]),
-                    },
-                },
-            ],
+            "relatedLocations": related_location_list,
         }
 
     def to_summary(self) -> str:
-        short_name = os.path.basename(self.filename)
-        related_short_name = os.path.basename(self.related_filename)
-        first = self.position_list[0]
-        second = self.position_list[1]
-        return f"[{self.rule_name}] {self.text} in {short_name}:{first.start_line}:{first.start_col} and {related_short_name}:{second.start_line}:{second.start_col}"
+        interpolated = [
+            f"{os.path.basename(loc)}:{res.start_line}:{res.start_col}"
+            for loc, res in zip(self.filenames, self.position_list)
+        ]
+        if len(interpolated) > 1:
+            prefix = " and "
+        else:
+            prefix = ""
+
+        full_str = ", ".join(interpolated[:-1]) + f"{prefix}{interpolated[-1]}"
+
+        return f"[{self.rule_name}] {self.text} in " + full_str
 
 
 ResultTypes = Union[Result, ResultMultiplePositions]
@@ -145,13 +143,12 @@ def create_result_token(filename: str, rule_name: str, text: str, token: Token) 
 
 
 def result_multiple_positions(
-    filename: str,
-    related_filename: str,
+    filenames: str,
     rule_name: str,
     text: str,
     position_list: List[PositionType],
 ) -> ResultMultiplePositions:
-    return ResultMultiplePositions(filename, related_filename, rule_name, text, position_list)
+    return ResultMultiplePositions(filenames, rule_name, text, position_list)
 
 
 def create_sarif(

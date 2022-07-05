@@ -42,8 +42,7 @@ class ImplicitImportRule:
                         files_marked.append(imp.file_location)
 
                         result = result_multiple_positions(
-                            func.file_location,
-                            imp.file_location,
+                            [func.file_location, imp.file_location],
                             self.RULE_NAME,
                             self.RULE_TEXT,
                             [func.position, imp.location],

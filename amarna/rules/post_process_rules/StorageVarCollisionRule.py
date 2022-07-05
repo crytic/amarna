@@ -45,15 +45,15 @@ class StorageVarCollisionRule:
         for name in seen:
             if len(seen[name]) > 1:
                 sorted_seen = sorted(seen[name], key=lambda x: x.file_location)
-                for duplicate in sorted_seen[1:]:
-                    result = result_multiple_positions(
-                        sorted_seen[0].file_location,
-                        duplicate.file_location,
-                        self.RULE_NAME,
-                        self.RULE_TEXT,
-                        [sorted_seen[0].position, duplicate.position],
-                    )
-                    # do not add findings twice
-                    if result.position_list not in (r.position_list for r in results):
-                        results.append(result)
+
+                result = result_multiple_positions(
+                    [s.file_location for s in sorted_seen],
+                    self.RULE_NAME,
+                    self.RULE_TEXT,
+                    [s.position for s in sorted_seen],
+                )
+                # do not add findings twice
+                if result.position_list not in (r.position_list for r in results):
+                    results.append(result)
+
         return results
