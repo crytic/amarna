@@ -8,13 +8,15 @@ from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
 from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer, ImportType
 
 
-class ImportedExternalRule:
+class ImplicitImportRule:
     """
-    External declared functions will be imported even if not explicitly imported.
+    External, view and l1_handler declared functions will be imported even if not explicitly imported.
     """
 
     RULE_TEXT = "[This](0) function will be imported by [here](1), even though it was not explicitly imported."
-    RULE_NAME = "external-function-implicitly-imported"
+    RULE_NAME = "implicit-import"
+
+    DECORATORS = ["external", "view", "l1_handler"]
 
     def run_rule(self, gathered_data: Dict) -> List[ResultMultiplePositions]:
         declared_functions: List[FunctionType] = gathered_data[
@@ -26,7 +28,7 @@ class ImportedExternalRule:
         results = []
 
         for func in declared_functions:
-            if "external" in func.decorators:
+            if any(decorator in self.DECORATORS for decorator in func.decorators):
                 files_marked = []
 
                 for imp in import_stmts:
