@@ -37,8 +37,7 @@ class UnenforcedViewRule(GenericRule):
                 if func.name == call.parent_function:
                     if any((decorator == "view") for decorator in func.decorators):
                         result = result_multiple_positions(
-                            original_call.file_name,
-                            func.file_location,
+                            [original_call.file_name, func.file_location],
                             self.RULE_NAME,
                             self.RULE_TEXT,
                             [original_call.position, func.position],
@@ -53,4 +52,5 @@ class UnenforcedViewRule(GenericRule):
         for f in function_calls:
             if f.tail_name == "write" or f.function_name == "storage_write":
                 check_parents(f, f)
+
         return results
