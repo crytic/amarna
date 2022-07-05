@@ -9,3 +9,6 @@ from amarna.rules.gatherer_rules.FunctionsUsedAsCallbacksGatherer import (
     FunctionsUsedAsCallbacksGatherer,
 )
 from amarna.rules.gatherer_rules.ImportGatherer import ImportGatherer
+from amarna.rules.gatherer_rules.FunctionsEmittingEventsGatherer import (
+    FunctionsEmittingEventsGatherer,
+)
