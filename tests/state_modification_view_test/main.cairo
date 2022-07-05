@@ -16,5 +16,11 @@ end
 
 func foo():
     storage_write()
+    bro.emit() 
+    return()
+end
+
+@event
+func bro():
     return()
 end

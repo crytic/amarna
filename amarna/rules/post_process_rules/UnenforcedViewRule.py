@@ -50,7 +50,11 @@ class UnenforcedViewRule(GenericRule):
                         check_parents(x, original_call)
 
         for f in function_calls:
-            if f.tail_name == "write" or f.function_name == "storage_write":
+            if (
+                f.tail_name == "write"
+                or f.tail_name == "emit"
+                or f.function_name == "storage_write"
+            ):
                 check_parents(f, f)
 
         return results
