@@ -5,5 +5,5 @@ from .post_process_rules.UniformAssertsConstants import UniformAssertsConstants
 from .post_process_rules.MustCheckOverflow import MustCheckOverflow
 from .post_process_rules.MustCheckCallerAddress import MustCheckCallerAddress
 from .post_process_rules.StorageVarCollisionRule import StorageVarCollisionRule
-from .post_process_rules.ImportedExternalsRule import ImportedExternalRule
+from .post_process_rules.ImplicitImportRule import ImplicitImportRule
 from .post_process_rules.UnenforcedViewRule import UnenforcedViewRule

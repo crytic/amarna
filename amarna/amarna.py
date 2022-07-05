@@ -128,7 +128,7 @@ class Amarna:
             with open(filename, "r", encoding="utf8") as f:
                 # the cairo grammar requires a newline at the end
                 return self.parser.parse(f.read() + "\n", start="cairo_file")
-        except exceptions.UnexpectedCharacters as e:
+        except (exceptions.UnexpectedCharacters, exceptions.UnexpectedToken) as e:
             print(f"Could not parse {filename}: {e}")
             return None
 
@@ -140,6 +140,7 @@ def analyze_directory(rootdir: str, rule_names: List[str]) -> List[Any]:
     amarna = Amarna(rule_names)
 
     all_results = []
+    run_gather = False
 
     for subdir, _dirs, files in os.walk(rootdir):
         for file in files:
@@ -152,8 +153,12 @@ def analyze_directory(rootdir: str, rule_names: List[str]) -> List[Any]:
 
                 all_results += amarna.run_local_rules(fname, parsed_cairo_file)
                 amarna.run_gatherer_rules(fname, parsed_cairo_file)
+                run_gather = True
 
-    all_results += amarna.run_post_process_rules()
+    if run_gather:
+        all_results += amarna.run_post_process_rules()
+    else:
+        print(f"Could not find any cairo files in {rootdir}")
     return sorted(all_results, key=lambda x: x.to_summary())
 
 
