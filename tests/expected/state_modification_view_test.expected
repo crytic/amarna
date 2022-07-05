@@ -1,4 +1,6 @@
 [arithmetic-add] in main.cairo:5:29
 [must-check-caller-address] in main.cairo:3:10
-[unenforced-view] in main.cairo:5:17
-[unenforced-view] in main.cairo:6:5
+[unenforced-view] [This](0) function call modifies state but is called within [this](1) @view context. in main.cairo:12:5 and main.cairo:1:1
+[unenforced-view] [This](0) function call modifies state but is called within [this](1) @view context. in main.cairo:18:5 and main.cairo:1:1
+[unenforced-view] [This](0) function call modifies state but is called within [this](1) @view context. in main.cairo:5:5 and main.cairo:1:1
+[unenforced-view] [This](0) function call modifies state but is called within [this](1) @view context. in main.cairo:6:5 and main.cairo:1:1
