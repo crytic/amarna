@@ -36,7 +36,7 @@ class UnenforcedViewRule(GenericRule):
             seen = []
             for func in declared_functions:
                 if func.name == call.parent_function:
-                    if any((decorator == "view") for decorator in func.decorators):
+                    if "view" in func.decorators:
                         result = result_multiple_positions(
                             [original_call.file_name, func.file_location],
                             self.RULE_NAME,
