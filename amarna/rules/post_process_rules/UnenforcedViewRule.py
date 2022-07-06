@@ -33,24 +33,32 @@ class UnenforcedViewRule(GenericRule):
         results = []
 
         def check_parents(call: FunctionCallType, original_call: FunctionCallType):
-            seen = []
             for func in declared_functions:
-                if func.name == call.parent_function:
-                    if "view" in func.decorators:
-                        result = result_multiple_positions(
-                            [original_call.file_name, func.file_location],
-                            self.RULE_NAME,
-                            self.RULE_TEXT,
-                            [original_call.position, func.position],
-                        )
-                        if result.position_list not in (r.position_list for r in results):
-                            results.append(result)
-                # also recursively check if parents are called from view context
-                for x in function_calls:
-                    if x.function_name == call.parent_function:
-                        if x.function_name not in seen:
-                            seen.append(x.function_name)
-                            check_parents(x, original_call)
+
+                # if it is not the parent, skip it
+                if func.name != call.parent_function:
+                    continue
+
+                # if the parent is a view, add to result
+                if "view" in func.decorators:
+                    result = result_multiple_positions(
+                        [original_call.file_name, func.file_location],
+                        self.RULE_NAME,
+                        self.RULE_TEXT,
+                        [original_call.position, func.position],
+                    )
+                    if result.position_list not in (r.position_list for r in results):
+                        results.append(result)
+                    continue
+
+                seen = []
+                # check if the parent is called somewhere else
+                for f in function_calls:
+                    if f.function_name != call.parent_function:
+                        continue
+                    if f.function_name not in seen:
+                        seen.append(f.function_name)
+                        check_parents(f, original_call)
 
         for f in function_calls:
             if (
