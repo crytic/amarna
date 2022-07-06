@@ -49,9 +49,9 @@ class UnenforcedViewRule(GenericRule):
                     )
                     if result.position_list not in (r.position_list for r in results):
                         results.append(result)
-                    continue
+                    break
 
-                seen = []
+                seen = [call.function_name]
                 # check if the parent is called somewhere else
                 for f in function_calls:
                     if f.function_name != call.parent_function:
