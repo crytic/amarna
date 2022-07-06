@@ -33,6 +33,7 @@ class UnenforcedViewRule(GenericRule):
         results = []
 
         def check_parents(call: FunctionCallType, original_call: FunctionCallType):
+            seen = []
             for func in declared_functions:
                 if func.name == call.parent_function:
                     if any((decorator == "view") for decorator in func.decorators):
@@ -47,7 +48,9 @@ class UnenforcedViewRule(GenericRule):
                 # also recursively check if parents are called from view context
                 for x in function_calls:
                     if x.function_name == call.parent_function:
-                        check_parents(x, original_call)
+                        if x.function_name not in seen:
+                            seen.append(x.function_name)
+                            check_parents(x, original_call)
 
         for f in function_calls:
             if (
