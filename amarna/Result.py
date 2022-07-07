@@ -74,11 +74,11 @@ class ResultMultiplePositions:
             {
                 "id": idx,
                 "physicalLocation": {
-                    "artifactLocation": {"uri": "file://" + self.filenames[idx], "index": 0},
+                    "artifactLocation": {"uri": "file://" + filename, "index": 0},
                     "region": sarif_region_from_position(self.position_list[idx]),
                 },
             }
-            for idx in enumerate(self.filenames)
+            for idx, filename in enumerate(self.filenames)
         ]
         return {
             "ruleId": self.rule_name,
