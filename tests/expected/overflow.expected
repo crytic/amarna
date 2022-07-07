@@ -1,0 +1,4 @@
+[must-check-overflow] in overflow.cairo:10:22
+[must-check-overflow] in overflow.cairo:26:22
+[unused-function] in overflow.cairo:19:1
+[unused-function] in overflow.cairo:3:1
