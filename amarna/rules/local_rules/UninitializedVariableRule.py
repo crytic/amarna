@@ -28,10 +28,16 @@ class UninitializedVariableRule(GenericRule):
             for child in let_reference.children[0].find_data("identifier_def"):
                 assigned_variables.add(child.children[0])
 
-        # ignore if they are expressed in a inst_assert_eq
+        # ignore if they are expressed in a inst_assert_eq used as assignment
         for a in tree.find_data("inst_assert_eq"):
             for children_id in a.children[0].find_data("identifier"):
                 assigned_variables.add(children_id.children[0])
+
+        # ignore if they are expressed in a assert used as assignment
+        for a in tree.find_data("code_element_compound_assert_eq"):
+            for b in a.children:
+                if b.data == "atom_identifier":
+                    assigned_variables.add(b.children[0].children[0])
 
         uninitialized_locals = local_variables - assigned_variables
         if not uninitialized_locals:

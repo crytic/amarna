@@ -4,6 +4,10 @@ func bar() -> (res):
     local y = 2
     local z
     let z = 1
+    local b
+    assert b = 2
+    local a
+    a = 3
     assert x * x = 25
     return (res=x)
 end

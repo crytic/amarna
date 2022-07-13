@@ -1,4 +1,5 @@
-[arithmetic-mul] in uninitialized_variable.cairo:7:12
+[arithmetic-mul] in uninitialized_variable.cairo:11:12
+[dead-store] in uninitialized_variable.cairo:10:5
 [dead-store] in uninitialized_variable.cairo:4:11
 [dead-store] in uninitialized_variable.cairo:5:11
 [uninitialized-variable] in uninitialized_variable.cairo:3:11
