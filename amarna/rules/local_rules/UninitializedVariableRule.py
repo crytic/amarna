@@ -1,3 +1,4 @@
+import re
 from typing import Set
 
 from lark import Tree, Token
@@ -51,7 +52,7 @@ class UninitializedVariableRule(GenericRule):
         # for now just ignore if they're in a hint
         used_in_hints = set()
         for uninitialized in uninitialized_locals:
-            if uninitialized.value in all_hints:
+            if re.search("ids\." + uninitialized.value + "( |,|\.).*=", all_hints):
                 used_in_hints.add(uninitialized)
 
         uninitialized_locals = uninitialized_locals - used_in_hints
