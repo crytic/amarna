@@ -27,6 +27,7 @@ Amarna is a static-analyzer and linter for the Cairo programming language.
 | 11  | Storage variable collision  | Multiple `@storage_var` with the same name.                                                                               | Warning | High      |
 | 12  | Implicit function import    | Function with decorator `@external, @view, @l1_handler` that is being implicitly imported.                                | Info    | High      |
 | 13  | Unenforced view function    | State modification within a `@view` function                                                                              | Info    | High      |
+| 14  | Uninitialized variable      | Local variables that are never initialized.                                                                               | Info    | High      |
 
 
 ## Usage
