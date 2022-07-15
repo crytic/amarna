@@ -94,8 +94,7 @@ The [SARIF](https://sarifweb.azurewebsites.net/) file format is a standard forma
 
 ## Installation
 ```bash
-git clone git@github.com:trailofbits/amarna.git && cd amarna
-pip install -e .
+pip install amarna
 ```
 
 
@@ -147,16 +146,3 @@ as the first line of `file.cairo` and running amarna with
 amarna directory/ --disable-inline -s
 ```
 will not report any arithmetic rule to the `file.cairo` file.
-
-
-
-
-----
-
-# Roadmap: Cairo patterns to implement in the future
- - [ ] find uninitialized variables
- - [ ] using ap and fp registers manually
- - [ ] call and jmp and revoked references
- - [ ] undefined behavior when using [ap] directly
- - [ ] callback before tempvars -- the callback might overwrite local variable memory.
-
