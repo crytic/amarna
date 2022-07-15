@@ -4,6 +4,7 @@ from amarna.amarna import Amarna, analyze_directory, analyze_file
 from amarna.Result import Result, ResultMultiplePositions, output_result
 from amarna.Result import SARIF_MODE, SUMMARY_MODE
 from typing import List, Union
+import sys
 
 example_usage = """---------------\nUsage examples\n---------------
 Analyze a Cairo project in the current directory and export results to a file:
@@ -42,7 +43,7 @@ def get_rule_names(rules: str, excluded: str) -> List[str]:
     for rule in rules + excluded:
         if rule not in ALL_RULES:
             print("Unknown rule: " + repr(rule))
-            exit(-1)
+            sys.exit(-1)
 
     if rules:
         base_rules = rules
@@ -84,7 +85,7 @@ def filter_results_from_disable(
     return new_results
 
 
-def main() -> None:
+def main() -> int:
     parser = argparse.ArgumentParser(
         description="Amarna is a static-analyzer for the Cairo programming language.",
         epilog=example_usage,
@@ -169,6 +170,8 @@ def main() -> None:
 
     if args.output or args.print:
         output_result(results, args.output, args.print, mode)
+
+    return 0
 
 
 if __name__ == "__main__":

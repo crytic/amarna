@@ -1,6 +1,5 @@
 from typing import Dict, List
 from amarna.Result import ResultMultiplePositions, result_multiple_positions
-from amarna.rules.GenericRule import GenericRule
 
 from amarna.rules.gatherer_rules.DeclaredFunctionsGatherer import (
     DeclaredFunctionsGatherer,
@@ -12,7 +11,7 @@ from amarna.rules.gatherer_rules.AllFunctionCallsGatherer import (
 )
 
 
-class UnenforcedViewRule(GenericRule):
+class UnenforcedViewRule:
     """
     Find state modifications in functions with @view decorator.
     """

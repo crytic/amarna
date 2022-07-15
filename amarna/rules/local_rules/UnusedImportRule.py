@@ -1,4 +1,4 @@
-from typing import Set
+from typing import List, Set
 from lark import Tree, Token
 from amarna.Result import PositionType, create_result
 
@@ -56,20 +56,19 @@ class UnusedImportRule(GenericRule):
             return
 
         # gather all hint code and check if the imports are there
-        all_hints = ""
+        all_hints: List[str] = []
         for hint in self.original_tree.find_data("code_element_hint"):
-            all_hints += hint.children[0]
+            all_hints.append(hint.children[0])
+
+        hints_str = "\n".join(all_hints)
 
         # remove imports used in hints
         used_in_hints = set()
         for unused in unused_imports:
-            if unused.value in all_hints:
+            if unused.value in hints_str:
                 used_in_hints.add(unused)
 
         unused_imports = unused_imports - used_in_hints
-
-        # if unused_imports:
-        #     print(f"In file {self.fname}:")
 
         # report unused imports
         for arg in sorted(unused_imports):
