@@ -34,10 +34,14 @@ class FunctionsEmittingEventsGatherer(GenericGatherer):
         return self.functions_emitting_events
 
     def code_element_function(self, tree: Tree) -> None:
+        function_name = None
+
         for child in tree.children:
             if child.data == "identifier_def":
                 function_name = str(child.children[0])
                 break
+
+        assert function_name != None
 
         events_emitted_list: List[EventEmitType] = []
 
