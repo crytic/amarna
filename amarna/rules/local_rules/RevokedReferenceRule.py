@@ -1,12 +1,7 @@
-from collections import defaultdict
-from typing import Set, Dict
-
 from lark import Tree, Token
 from amarna.rules.GenericRule import GenericRule
 from amarna.Result import (
-    getPosition,
     token_positions,
-    ResultMultiplePositions,
     result_multiple_positions,
 )
 
