@@ -1,0 +1,4 @@
+[dead-store] in revoked_reference.cairo:3:8
+[revoked-reference] Potentially revoked reference in use because of a function call inbetween reference [declaration](0) and [usage](1). in revoked_reference.cairo:2:8 and revoked_reference.cairo:5:16
+[unused-arguments] in revoked_reference.cairo:1:14
+[unused-function] in revoked_reference.cairo:1:1
