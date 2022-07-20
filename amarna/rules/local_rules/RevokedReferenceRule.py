@@ -18,7 +18,7 @@ class RevokedReferenceRule(GenericRule):
         for i, a in enumerate(tree.children):
             if a.children[0].data == "code_element_reference":
                 tokens = list(a.scan_values(lambda v: isinstance(v, Token)))
-                if not str(tokens[1]) == "ap":
+                if not any(str(tkn) == "ap" for tkn in tokens):
                     continue
 
                 for j, b in enumerate(tree.children[i:]):
