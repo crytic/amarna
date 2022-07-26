@@ -17,7 +17,7 @@ class ArithmeticOperationsRule(GenericRule):
     RULE_PREFIX = "arithmetic-"
 
 
-PRIME = 2 ** 251 + 17 * 2 ** 192 + 1
+PRIME = 2**251 + 17 * 2**192 + 1
 
 
 def egcd(a, b):
