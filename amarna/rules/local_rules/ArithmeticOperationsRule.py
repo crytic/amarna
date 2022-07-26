@@ -20,6 +20,28 @@ class ArithmeticOperationsRule(GenericRule):
 PRIME = 2 ** 251 + 17 * 2 ** 192 + 1
 
 
+def egcd(a, b):
+    if a == 0:
+        return (b, 0, 1)
+    else:
+        g, y, x = egcd(b % a, a)
+        return (g, x - (b // a) * y, y)
+
+
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        return None
+    else:
+        return x % m
+
+
+def div(x, y):
+    if x == None or y == None:
+        return None
+    return x * modinv(y, PRIME) % PRIME
+
+
 def recursion_gather_operands(tree: Tree, numbers: List[int]):
     original_operation = tree.data
 
@@ -47,6 +69,8 @@ def is_potential_overflow(
         return None, True
 
     result = reduce(op, rec)
+    if not result:
+        return None, True
 
     if result < 0 or result >= PRIME:
         return result, True
@@ -74,7 +98,7 @@ class DivArithmeticOperationsRule(ArithmeticOperationsRule):
     RULE_NAME = ArithmeticOperationsRule.RULE_PREFIX + "div"
 
     def expr_div(self, tree: Tree) -> None:
-        res, _ = is_potential_overflow(tree, lambda x, y: (x * pow(y, -1, PRIME) % PRIME))
+        res, _ = is_potential_overflow(tree, div)
         text = self.RULE_TEXT
         if res:
             text += f" This division will return {res}."
