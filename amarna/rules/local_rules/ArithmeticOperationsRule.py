@@ -1,3 +1,5 @@
+from functools import reduce
+from typing import Callable, Tuple, Union, List
 from lark import Tree
 
 from amarna.rules.GenericRule import GenericRule
@@ -15,11 +17,56 @@ class ArithmeticOperationsRule(GenericRule):
     RULE_PREFIX = "arithmetic-"
 
 
+PRIME = 2 ** 251 + 17 * 2 ** 192 + 1
+
+
+def recursion_gather_operands(tree: Tree, numbers: List[int]):
+    original_operation = tree.data
+
+    for child in tree.children:
+        data = child.data
+        if data == "atom_number":
+            num = child.children[0]
+            numbers.append(int(str(num)))
+        elif data == "notes":
+            continue
+        elif data == original_operation:
+            recursion_gather_operands(child, numbers)
+        else:
+            # print("found node: ", data)
+            return None
+
+    return numbers
+
+
+def is_potential_overflow(
+    tree: Tree, op: Callable[[int, int], int]
+) -> Tuple[Union[int, None], bool]:
+    rec = recursion_gather_operands(tree, [])
+    if not rec:
+        return None, True
+
+    result = reduce(op, rec)
+
+    if result < 0 or result >= PRIME:
+        return result, True
+
+    return result, False
+
+
 class MulArithmeticOperationsRule(ArithmeticOperationsRule):
     RULE_NAME = ArithmeticOperationsRule.RULE_PREFIX + "mul"
 
     def expr_mul(self, tree: Tree) -> None:
-        result = create_result(self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree))
+        res, overflow = is_potential_overflow(tree, lambda x, y: x * y)
+        if not overflow:
+            return
+
+        text = self.RULE_TEXT
+        if res:
+            text += f" This multiplication will overflow and return {res % PRIME}."
+
+        result = create_result(self.fname, self.RULE_NAME, text, getPosition(tree))
         self.results.append(result)
 
 
@@ -27,7 +74,12 @@ class DivArithmeticOperationsRule(ArithmeticOperationsRule):
     RULE_NAME = ArithmeticOperationsRule.RULE_PREFIX + "div"
 
     def expr_div(self, tree: Tree) -> None:
-        result = create_result(self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree))
+        res, _ = is_potential_overflow(tree, lambda x, y: (x * pow(y, -1, PRIME) % PRIME))
+        text = self.RULE_TEXT
+        if res:
+            text += f" This division will return {res}."
+
+        result = create_result(self.fname, self.RULE_NAME, text, getPosition(tree))
         self.results.append(result)
 
 
@@ -39,7 +91,15 @@ class AddArithmeticOperationsRule(ArithmeticOperationsRule):
         if tree.children[0].data == "atom_reg":
             return
 
-        result = create_result(self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree))
+        res, overflow = is_potential_overflow(tree, lambda x, y: x + y)
+        if not overflow:
+            return
+
+        text = self.RULE_TEXT
+        if res:
+            text += f" This addition will overflow and return {res % PRIME}."
+
+        result = create_result(self.fname, self.RULE_NAME, text, getPosition(tree))
         self.results.append(result)
 
 
@@ -51,5 +111,13 @@ class SubArithmeticOperationsRule(ArithmeticOperationsRule):
         if tree.children[0].data == "atom_reg":
             return
 
-        result = create_result(self.fname, self.RULE_NAME, self.RULE_TEXT, getPosition(tree))
+        res, overflow = is_potential_overflow(tree, lambda x, y: x - y)
+        if not overflow:
+            return
+
+        text = self.RULE_TEXT
+        if res:
+            text += f" This subtraction will overflow and return {res % PRIME}."
+
+        result = create_result(self.fname, self.RULE_NAME, text, getPosition(tree))
         self.results.append(result)
