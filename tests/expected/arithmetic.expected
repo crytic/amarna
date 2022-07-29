@@ -1,0 +1,4 @@
+[arithmetic-add] in arithmetic.cairo:7:17
+[arithmetic-div] in arithmetic.cairo:6:15
+[arithmetic-mul] in arithmetic.cairo:3:15
+[unused-function] in arithmetic.cairo:1:1
