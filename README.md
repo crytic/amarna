@@ -9,8 +9,26 @@ Amarna is a static-analyzer and linter for the Cairo programming language.
  - Exports the parsed AST of a Cairo file
  - Exports static-analysis results to the [SARIF](https://sarifweb.azurewebsites.net/) format.
 
+## Basic Usage
+Analyze a Cairo project in the current directory and export the SARIF results to a file:
+ ```bash
+ amarna . -o out.sarif
+ ```
 
-### Currently supported rules
+Analyze a single file `file.cairo` and export the SARIF results to a file:
+ ```bash
+ amarna file.cairo -o out.sarif
+ ```
+
+Analyze a single file `file.cairo` and print a summary of the results:
+ ```bash
+ amarna file.cairo -s
+ ```
+ 
+### Integration
+ - For GitHub action integration, use [amarna-action](https://github.com/crytic/amarna-action).
+
+## Currently supported rules
 
 | #   | Rule                        | What it finds                                                                                                             | Impact  | Precision |
 | --- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------- | --------- |
