@@ -15,6 +15,7 @@ class RevokedReferenceRule(GenericRule):
     RULE_NAME = "revoked-reference"
 
     def code_block(self, tree: Tree) -> None:
+        revokable_instr = ["code_element_func_call", "code_element_label"]
         for i, a in enumerate(tree.children):
             if a.children[0].data == "code_element_reference":
                 tokens = list(a.scan_values(lambda v: isinstance(v, Token)))
@@ -22,7 +23,7 @@ class RevokedReferenceRule(GenericRule):
                     continue
 
                 for j, b in enumerate(tree.children[i:]):
-                    if b.children[0].data == "code_element_func_call":
+                    if b.children[0].data in revokable_instr:
                         for c in tree.children[(i + j + 1) :]:
                             usage = list(
                                 c.scan_values(
