@@ -37,4 +37,7 @@ class RevokedReferenceRule(GenericRule):
                                     self.RULE_TEXT,
                                     [token_positions(tokens[0]), token_positions(use)],
                                 )
-                                self.results.append(result)
+                                if result.position_list not in (
+                                    r.position_list for r in self.results
+                                ):
+                                    self.results.append(result)
