@@ -72,8 +72,13 @@ named_identifier: IDENTIFIER                    -> named_identifier
 !reg: "ap" -> reg_ap
     | "fp" -> reg_fp
 
-bool_expr: expr _DBL_EQ expr   -> bool_expr_eq
-         | expr _NEQ expr      -> bool_expr_neq
+?bool_expr: bool_and
+
+?bool_and: bool_and "and" notes bool_atom     -> bool_and_expr
+         | bool_atom
+
+?bool_atom: expr _DBL_EQ notes expr           -> bool_expr_eq
+          | expr _NEQ    notes expr           -> bool_expr_neq
 
 !modifier: "local" -> modifier_local
 
@@ -159,6 +164,7 @@ code_element: instruction                                       -> code_element_
             | identifier ":"                                    -> code_element_label
             | _func                                             -> code_element_function
             | _struct                                           -> code_element_struct
+            | "using" identifier_def "=" type                   -> code_element_typedef
             | _with_attr_statement                              -> code_element_with_attr
             | _with_statement                                   -> code_element_with
             | HINT                                              -> code_element_hint
