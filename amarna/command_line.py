@@ -96,7 +96,7 @@ def main() -> int:
         metavar="-f",
         type=str,
         help="the name of the .cairo file or directory with .cairo files to analyze",
-        nargs="?",
+        nargs="?"
     )
 
     parser.add_argument("-p", "--print", action="store_true", help="print output")
