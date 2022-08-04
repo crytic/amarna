@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+import json
 
 from amarna.amarna import Amarna, analyze_directory, analyze_file
-from amarna.Result import create_summary
+from amarna.Result import create_summary, create_sarif
 from amarna.command_line import filter_results_from_disable
 
 _module_dir = Path(__file__).resolve().parent
@@ -15,6 +16,7 @@ def test_all() -> None:
         if TESTS_DIR_STR == subdir:
             for file in files:
                 _test_single(file)
+                _test_sarif(file)
 
         if subdir.endswith("test"):
             _test_directory(subdir)
@@ -45,6 +47,31 @@ def _test_single(filename: str) -> None:
         print("at {}".format(expected_result))
         with open(expected_result, "w", encoding="utf8") as f:
             f.write(summary)
+
+
+def _test_sarif(filename: str) -> None:
+    FILE, ext = os.path.splitext(filename)
+    if ext != ".cairo":
+        return
+
+    test_file = str(TESTS_DIR.joinpath(FILE + ext))
+
+    all_rules = Amarna.get_all_rule_names()
+
+    results = analyze_file(test_file, all_rules)
+    results = filter_results_from_disable(results)
+
+    results_sarif = list(map(lambda res: res.to_sarif(), results))
+    sarif = {
+        "version": "2.1.0",
+        "$schema": "http://json.schemastore.org/sarif-2.1.0-rtm.4",
+        "runs": [{"tool": {"driver": {"name": "Amarna"}}, "results": results_sarif}],
+    }
+
+    try:
+        json.loads(json.dumps(sarif))
+    except json.JSONDecodeError as e:
+        print("Sarif generation is broken.")
 
 
 def _test_directory(filename: str) -> None:
