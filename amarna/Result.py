@@ -151,9 +151,7 @@ def result_multiple_positions(
     return ResultMultiplePositions(filenames, rule_name, text, position_list)
 
 
-def create_sarif(
-    results: List[Any], fname: Optional[str] = None, printoutput: bool = False
-) -> None:
+def create_sarif(results: List[Any], fname: Optional[str] = None, printoutput: bool = False) -> str:
     """
     Create the sarif output json for the results, and write it to file or print it.
     """
@@ -168,8 +166,11 @@ def create_sarif(
         with open(os.path.join(os.getcwd(), fname), "w", encoding="utf8") as f:
             json.dump(sarif, f, indent=1)
 
+    sarif_str = json.dumps(sarif)
     if printoutput:
-        print(json.dumps(sarif))
+        print(sarif_str)
+
+    return sarif_str
 
 
 def sarif_region_from_position(position: PositionType) -> Dict[str, int]:
