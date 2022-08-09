@@ -96,7 +96,7 @@ def main() -> int:
         metavar="-f",
         type=str,
         help="the name of the .cairo file or directory with .cairo files to analyze",
-        nargs="?"
+        nargs="?",
     )
 
     parser.add_argument("-p", "--print", action="store_true", help="print output")
@@ -150,8 +150,11 @@ def main() -> int:
 
     filename = args.filename
 
-    if not os.path.isabs(filename):
+    if filename is not None and not os.path.isabs(filename):
         filename = os.path.join(os.getcwd(), filename)
+
+    if not os.path.exists(filename):
+        raise Exception("The specified file doesn't exist")
 
     rule_set_names: List[str] = get_rule_names(args.rules, args.exclude_rules)
 
