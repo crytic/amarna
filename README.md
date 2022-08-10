@@ -133,7 +133,7 @@ Examples of these are:
 ### Rule names
 Obtain the names of the currently implemented rules with:
 ```bash
- amarna --show-rules .
+ amarna --show-rules
 ```
 
 ### Rule allowlist
