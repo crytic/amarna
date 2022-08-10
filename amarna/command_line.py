@@ -158,7 +158,7 @@ def main() -> int:
         filename = os.path.join(os.getcwd(), filename)
 
     if not os.path.exists(filename):
-        print("The specified file doesn't exist")
+        print(f"The specified file doesn't exist: {filename}")
         return -1
 
     rule_set_names: List[str] = get_rule_names(args.rules, args.exclude_rules)
