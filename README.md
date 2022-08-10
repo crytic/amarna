@@ -104,6 +104,8 @@ optional arguments:
                         Show all supported rules and descriptions.
   -disable-inline, --disable-inline
                         Disable rules with inline comments. The comments should be the first line and of the form: # amarna: disable=rulename1,rulename2
+  -config, --config
+                        The path to the amarna config file (if not provided will check for amarna.toml)
 ```
 
 ## SARIF file format
@@ -164,3 +166,25 @@ as the first line of `file.cairo` and running amarna with
 amarna directory/ --disable-inline -s
 ```
 will not report any arithmetic rule to the `file.cairo` file.
+
+
+## Config file
+You can create a config file for amarna and specify its path with `-config`
+For example
+``bash
+amarna . -config config.toml
+```
+If the config file path is not specified it will default to `amarna.toml`
+The config file should look like this
+```toml
+[rules]
+exclude = """rule1,
+             rule2,
+             rule3
+"""
+include = """rule1,
+             rule2,
+             rule3
+"""
+disable_inline = true
+```
