@@ -150,11 +150,16 @@ def main() -> int:
 
     filename = args.filename
 
-    if filename is not None and not os.path.isabs(filename):
+    if filename is None:
+        print("No file specified")
+        return -1
+
+    if not os.path.isabs(filename):
         filename = os.path.join(os.getcwd(), filename)
 
     if not os.path.exists(filename):
-        raise Exception("The specified file doesn't exist")
+        print("The specified file doesn't exist")
+        return -1
 
     rule_set_names: List[str] = get_rule_names(args.rules, args.exclude_rules)
 
