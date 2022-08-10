@@ -1,10 +1,12 @@
 import os
+import sys
 import argparse
+import tomli
+from typing import List, Union, Dict
 from amarna.amarna import Amarna, analyze_directory, analyze_file
 from amarna.Result import Result, ResultMultiplePositions, output_result
 from amarna.Result import SARIF_MODE, SUMMARY_MODE
-from typing import List, Union, Dict
-import sys
+
 
 example_usage = """---------------\nUsage examples\n---------------
 Analyze a Cairo project in the current directory and export results to a file:
@@ -142,6 +144,13 @@ def main() -> int:
         help="Disable rules with inline comments. The comments should be the first line and of the form: # amarna: disable=rulename1,rulename2",
     )
 
+    parser.add_argument(
+        "-config",
+        "--config",
+        type=str,
+        help="Specify config file path.",
+    )
+
     args = parser.parse_args()
 
     if args.show_rules:
@@ -149,6 +158,7 @@ def main() -> int:
         return 1
 
     filename = args.filename
+    config_file = args.config
 
     if filename is None:
         print("No file specified")
@@ -162,6 +172,21 @@ def main() -> int:
         return -1
 
     rule_set_names: List[str] = get_rule_names(args.rules, args.exclude_rules)
+    if config_file is None:
+        print("No config file specified, trying with amarna.toml")
+        config_file = "amarna.toml"
+
+    try:
+        with open(config_file, "rb") as f:
+            config = tomli.load(f)
+    except FileNotFoundError as e:
+        print("No config file found")
+        config = None
+
+    rule_set_names: List[str] = get_rule_names(
+        ",".join(filter(None, (args.rules, config.get("rules", dict()).get("include")))),
+        ",".join(filter(None, (args.exclude_rules, config.get("rules", dict()).get("exclude")))),
+    )
 
     results: List[Union[Result, ResultMultiplePositions]]
     if os.path.isdir(filename):
@@ -169,7 +194,7 @@ def main() -> int:
     else:
         results = analyze_file(filename, rule_set_names, png=args.png)
 
-    if args.disable_inline:
+    if args.disable_inline or config.get("rules", dict()).get("disable_inline", False):
         results = filter_results_from_disable(results)
 
     mode = SARIF_MODE
