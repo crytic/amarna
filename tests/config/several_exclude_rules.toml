@@ -1,0 +1,12 @@
+[rules]
+exclude = """
+arithmetic-add,
+dead-store,
+arithmetic-div,
+arithmetic-mul,
+arithmetic-sub,
+uninitialized-variable,
+unknown-decorator,
+unused-arguments,
+unused-imports,
+"""

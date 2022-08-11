@@ -1,0 +1,3 @@
+[rules]
+include = "arithmetic-add"
+exclude = "arithmetic-sub"
