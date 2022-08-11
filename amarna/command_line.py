@@ -181,7 +181,7 @@ def main() -> int:
             config = tomli.load(f)
     except FileNotFoundError as e:
         print("No config file found")
-        config = None
+        config = dict()
 
     rule_set_names: List[str] = get_rule_names(
         ",".join(filter(None, (args.rules, config.get("rules", dict()).get("include")))),
