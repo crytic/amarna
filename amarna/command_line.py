@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 import tomli
-from typing import List, Union, Dict
+from typing import List, Optional, Tuple, Union, Dict
 from amarna.amarna import Amarna, analyze_directory, analyze_file
 from amarna.Result import Result, ResultMultiplePositions, output_result
 from amarna.Result import SARIF_MODE, SUMMARY_MODE
@@ -52,7 +52,7 @@ def get_rule_names(rule_str: str, excluded_str: str) -> List[str]:
     else:
         base_rules = ALL_RULES
 
-    return [rule for rule in base_rules if rule not in excluded]
+    return list({rule for rule in base_rules if rule not in excluded})
 
 
 def filter_results_from_disable(
@@ -87,7 +87,7 @@ def filter_results_from_disable(
     return new_results
 
 
-def main() -> int:
+def parse_args(argv: Optional[List[str]] = None):
     parser = argparse.ArgumentParser(
         description="Amarna is a static-analyzer for the Cairo programming language.",
         epilog=example_usage,
@@ -150,15 +150,34 @@ def main() -> int:
         type=str,
         help="Specify config file path.",
     )
+    return parser.parse_args(argv)
 
-    args = parser.parse_args()
+
+def get_config_from_file(config_file) -> Tuple[str, str, bool]:
+    if config_file is None:
+        print("No config file specified, trying with amarna.toml")
+        config_file = "amarna.toml"
+
+    try:
+        with open(config_file, "rb") as f:
+            config = tomli.load(f)
+    except FileNotFoundError as e:
+        print("No config file found")
+        config = dict()
+    exclude = config.get("rules", dict()).get("exclude")
+    include = config.get("rules", dict()).get("include")
+    disable_inline = config.get("rules", dict()).get("disable_inline", False)
+    return include, exclude, disable_inline
+
+
+def main() -> int:
+    args = parse_args()
 
     if args.show_rules:
         Amarna.print_rule_names_and_descriptions()
         return 1
 
     filename = args.filename
-    config_file = args.config
 
     if filename is None:
         print("No file specified")
@@ -171,30 +190,21 @@ def main() -> int:
         print(f"The specified file doesn't exist: {filename}")
         return -1
 
-    rule_set_names: List[str] = get_rule_names(args.rules, args.exclude_rules)
-    if config_file is None:
-        print("No config file specified, trying with amarna.toml")
-        config_file = "amarna.toml"
-
-    try:
-        with open(config_file, "rb") as f:
-            config = tomli.load(f)
-    except FileNotFoundError as e:
-        print("No config file found")
-        config = dict()
+    include, exclude, disable_inline = get_config_from_file(args.config)
 
     rule_set_names: List[str] = get_rule_names(
-        ",".join(filter(None, (args.rules, config.get("rules", dict()).get("include")))),
-        ",".join(filter(None, (args.exclude_rules, config.get("rules", dict()).get("exclude")))),
+        ",".join(filter(None, (args.rules, include))),
+        ",".join(filter(None, (args.exclude_rules, exclude))),
     )
 
     results: List[Union[Result, ResultMultiplePositions]]
+
     if os.path.isdir(filename):
         results = analyze_directory(filename, rule_set_names)
     else:
         results = analyze_file(filename, rule_set_names, png=args.png)
 
-    if args.disable_inline or config.get("rules", dict()).get("disable_inline", False):
+    if args.disable_inline or disable_inline:
         results = filter_results_from_disable(results)
 
     mode = SARIF_MODE
