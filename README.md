@@ -171,7 +171,7 @@ will not report any arithmetic rule to the `file.cairo` file.
 ## Config file
 You can create a config file for amarna and specify its path with `-config`
 For example
-``bash
+```bash
 amarna . -config config.toml
 ```
 If the config file path is not specified it will default to `amarna.toml`
