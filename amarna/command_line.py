@@ -155,15 +155,14 @@ def parse_args(argv: Optional[List[str]] = None):
 
 def get_config_from_file(config_file) -> Tuple[str, str, bool]:
     if config_file is None:
-        print("No config file specified, trying with amarna.toml")
         config_file = "amarna.toml"
 
     try:
         with open(config_file, "rb") as f:
             config = tomli.load(f)
-    except FileNotFoundError as e:
-        print("No config file found")
+    except (FileNotFoundError, tomli.TOMLDecodeError):
         config = dict()
+
     exclude = config.get("rules", dict()).get("exclude")
     include = config.get("rules", dict()).get("include")
     disable_inline = config.get("rules", dict()).get("disable_inline", False)
