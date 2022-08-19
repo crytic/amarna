@@ -37,6 +37,7 @@ class DeadStoreRule(GenericRule):
                 implicits_and_arguments.append(str(args.children[0]))
 
         defines: Set[Token] = set()
+        in_return = []
         for main_child in tree.children:
             if main_child.data != "code_block":
                 continue
@@ -62,18 +63,18 @@ class DeadStoreRule(GenericRule):
 
                     # in a return statement, check which variables were not used
                     for subcode in child.children[0].find_data("code_element_return"):
-                        tokens = [
-                            str(tok) for tok in subcode.scan_values(lambda v: isinstance(v, Token))
-                        ]
-                        for dead_store in sorted(defines):
-                            if dead_store in tokens or dead_store in implicits_and_arguments:
-                                continue
-                            sarif = create_result_token(
-                                self.fname,
-                                self.RULE_NAME,
-                                self.RULE_TEXT,
-                                dead_store,
-                            )
-                            if sarif in self.results:
-                                continue
-                            self.results.append(sarif)
+                        for tok in subcode.scan_values(lambda v: isinstance(v, Token)):
+                            in_return.append(str(tok))
+
+        for dead_store in sorted(defines):
+            if dead_store in in_return or dead_store in implicits_and_arguments:
+                continue
+            sarif = create_result_token(
+                self.fname,
+                self.RULE_NAME,
+                self.RULE_TEXT,
+                dead_store,
+            )
+            if sarif in self.results:
+                continue
+            self.results.append(sarif)
