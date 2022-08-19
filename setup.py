@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 
 setup(
     name="amarna",
-    version="0.1.2",
+    version="0.1.3",
     description="Amarna is a static-analyzer for the Cairo programming language.",
     url="https://github.com/crytic/amarna",
     author="Trail of Bits",
