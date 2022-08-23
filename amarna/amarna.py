@@ -59,7 +59,7 @@ class Amarna:
         )
 
     @staticmethod
-    def print_rule_names_and_descriptions() -> List[str]:
+    def print_rule_names_and_descriptions() -> None:
         ruleset = Amarna.load_classes_in_module(local_rules_module) + Amarna.load_classes_in_module(
             post_process_rules_module
         )

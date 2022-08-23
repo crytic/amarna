@@ -58,7 +58,7 @@ class Result:
 class ResultMultiplePositions:
     def __init__(
         self,
-        filenames: str,
+        filenames: List[str],
         rule_name: str,
         text: str,
         position_list: List[PositionType],
@@ -143,7 +143,7 @@ def create_result_token(filename: str, rule_name: str, text: str, token: Token) 
 
 
 def result_multiple_positions(
-    filenames: str,
+    filenames: List[str],
     rule_name: str,
     text: str,
     position_list: List[PositionType],

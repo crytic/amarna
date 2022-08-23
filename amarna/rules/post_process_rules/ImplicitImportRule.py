@@ -39,6 +39,10 @@ class ImplicitImportRule:
                         if imp.file_location in files_marked:
                             continue
 
+                        # ignore explicitely imported functions
+                        if imp.import_name == func.name:
+                            continue
+
                         files_marked.append(imp.file_location)
 
                         result = result_multiple_positions(
