@@ -29,24 +29,26 @@ class ImplicitImportRule:
 
         for func in declared_functions:
             if any(decorator in self.DECORATORS for decorator in func.decorators):
-                files_marked = []
 
+                explicitly_imp: List[ImportType] = []
+                explicitly_import_names: List[str] = []
                 for imp in import_stmts:
-                    # check if there is any import from the location
-                    # of the external function
+                    # gather all explicitly imported functions
+                    # from the location of the external function
                     if func.file_location.endswith(imp.where_imported):
-                        # do not flag the same file repeatedly
-                        if imp.file_location in files_marked:
-                            continue
+                        explicitly_import_names.append(imp.import_name)
+                        explicitly_imp.append(imp)
 
-                        files_marked.append(imp.file_location)
-
-                        result = result_multiple_positions(
-                            [func.file_location, imp.file_location],
-                            self.RULE_NAME,
-                            self.RULE_TEXT,
-                            [func.position, imp.location],
-                        )
-                        results.append(result)
+                # check if there was any import and that it was not
+                # explicitly imported
+                if explicitly_imp and func.name not in explicitly_import_names:
+                    imp = explicitly_imp[0]
+                    result = result_multiple_positions(
+                        [func.file_location, imp.file_location],
+                        self.RULE_NAME,
+                        self.RULE_TEXT,
+                        [func.position, imp.location],
+                    )
+                    results.append(result)
 
         return results
