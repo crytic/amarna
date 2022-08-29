@@ -1,4 +1,3 @@
-[implicit-import] [This](0) function will be imported by [here](1), even though it was not explicitly imported. in utils.cairo:19:1 and proxy.cairo:3:19
-[must-check-caller-address] in utils.cairo:10:10
-[must-check-caller-address] in utils.cairo:23:10
-[unused-imports] in proxy.cairo:3:19
+[implicit-import] [This](0) function will be imported by [here](1), even though it was not explicitly imported. in utils.cairo:17:1 and proxy.cairo:3:19
+[must-check-caller-address] in utils.cairo:19:10
+[must-check-caller-address] in utils.cairo:8:10
