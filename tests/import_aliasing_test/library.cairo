@@ -1,5 +1,5 @@
-func foo() -> ():
-end
+func foo() -> () {
+}
 
-func bar() -> ():
-end
+func bar() -> () {
+}

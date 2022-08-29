@@ -1,5 +1,4 @@
 @foobar
-func main():
-    return ()
-
-end
+func main() {
+    return ();
+}

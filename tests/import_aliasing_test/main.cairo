@@ -1,5 +1,5 @@
 from library import foo as bar
 
-func main() -> ():
-    bar()
-end
+func main() -> () {
+    bar();
+}

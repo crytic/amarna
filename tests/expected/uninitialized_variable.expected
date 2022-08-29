@@ -3,4 +3,5 @@
 [dead-store] in uninitialized_variable.cairo:4:11
 [dead-store] in uninitialized_variable.cairo:5:11
 [uninitialized-variable] in uninitialized_variable.cairo:3:11
+[uninitialized-variable] in uninitialized_variable.cairo:7:11
 [unused-function] in uninitialized_variable.cairo:1:1

@@ -1,5 +1,5 @@
-[arithmetic-sub] in asserts.cairo:7:71
-[arithmetic-sub] in asserts.cairo:8:71
-[inconsistent-assert-constant] This assertion uses the same constant differently [here](0) and [here](1). in asserts.cairo:8:51 and asserts.cairo:7:51
-[inconsistent-assert-constant] This assertion uses the same constant differently [here](0) and [here](1). in asserts.cairo:9:51 and asserts.cairo:7:51
+[arithmetic-sub] in asserts.cairo:5:71
+[arithmetic-sub] in asserts.cairo:6:71
+[inconsistent-assert-constant] This assertion uses the same constant differently [here](0) and [here](1). in asserts.cairo:6:51 and asserts.cairo:5:51
+[inconsistent-assert-constant] This assertion uses the same constant differently [here](0) and [here](1). in asserts.cairo:7:51 and asserts.cairo:5:51
 [unused-function] in asserts.cairo:1:1
