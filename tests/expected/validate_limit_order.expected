@@ -7,6 +7,8 @@
 [arithmetic-mul] in validate_limit_order.cairo:74:35
 [arithmetic-mul] in validate_limit_order.cairo:74:9
 [arithmetic-sub] in validate_limit_order.cairo:58:14
+[unused-arguments] in validate_limit_order.cairo:80:25
+[unused-arguments] in validate_limit_order.cairo:86:66
 [unused-function] in validate_limit_order.cairo:26:1
 [unused-function] in validate_limit_order.cairo:80:1
 [unused-function] in validate_limit_order.cairo:84:1
