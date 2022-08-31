@@ -1,0 +1,7 @@
+[arithmetic-add] in callbacks.cairo:8:18
+[arithmetic-sub] in callbacks.cairo:8:18
+[dead-store] in callbacks.cairo:5:9
+[dead-store] in callbacks.cairo:6:9
+[dead-store] in callbacks.cairo:7:9
+[dead-store] in callbacks.cairo:8:9
+[unused-function] in callbacks.cairo:1:1

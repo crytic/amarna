@@ -36,8 +36,8 @@ class FunctionsUsedAsCallbacksGatherer(GenericGatherer):
         # TODO (montyly): attribute access error
         function_name = children_id.children[0].value  # type: ignore
         if function_name == "serialize_array":
-            arguments = tree.children[1]
-            callback_arg = arguments.children[-1]
+            arguments = tree.children[1].children[0]
+            callback_arg = arguments.children[-3]
             ids = list(callback_arg.find_data("identifier"))
             # variable callback
             if len(ids) == 1:
