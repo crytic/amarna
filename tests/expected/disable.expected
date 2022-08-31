@@ -7,10 +7,6 @@
 [arithmetic-mul] in disable.cairo:75:35
 [arithmetic-mul] in disable.cairo:75:9
 [arithmetic-sub] in disable.cairo:59:14
-[dead-store] in disable.cairo:101:9
-[dead-store] in disable.cairo:115:9
-[dead-store] in disable.cairo:116:9
-[dead-store] in disable.cairo:118:9
 [unused-function] in disable.cairo:27:1
 [unused-function] in disable.cairo:81:1
 [unused-function] in disable.cairo:85:1
