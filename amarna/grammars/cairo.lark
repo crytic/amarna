@@ -59,7 +59,7 @@ identifier_def: IDENTIFIER
      | "nondet" HINT                          -> atom_hint
      | reg                                    -> atom_reg
      | function_call                          -> atom_func_call
-     | identifier
+     | identifier                             -> atom_identifier
      | "[" notes expr "]"                     -> atom_deref
      | atom "[" notes expr "]"                -> atom_subscript
      | atom "." identifier_def                -> atom_dot
