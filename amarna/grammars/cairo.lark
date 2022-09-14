@@ -17,12 +17,21 @@ _NEQ: "!="
 _ARROW: "->"
 _AT: "@"
 
+comma: ","
+_expr_sep: (comma | nonempty_notes)+
+comma_separated_with_notes{item}: notes item? (_expr_sep item)* _expr_sep?
+
+
 // Types.
-type: "felt"                           -> type_felt
-    | identifier                       -> type_struct
-    | type "*"                         -> type_pointer
-    | type _DBL_STAR                   -> type_pointer2
-    | "(" ((type ",")* type ","?)? ")" -> type_tuple
+// Types.
+named_type: identifier (":" type)? | non_identifier_type
+non_identifier_type: "felt"                                         -> type_felt
+                   | "codeoffset"                                   -> type_codeoffset
+                   | type "*"                                       -> type_pointer
+                   | type _DBL_STAR                                 -> type_pointer2
+                   | "(" comma_separated_with_notes{named_type} ")" -> type_tuple
+?type: non_identifier_type
+     | identifier             -> type_struct
 
 // Expressions.
 expr_assignment: expr | identifier_def "=" expr
@@ -31,8 +40,7 @@ non_def_expr_assignment: expr | named_identifier "=" expr
 ?arg_list_item: expr_assignment
 ?non_def_arg_list_item: non_def_expr_assignment
 
-comma: ","
-_expr_sep: (comma | nonempty_notes)+
+
 arg_list: (notes arg_list_item? (_expr_sep arg_list_item)* _expr_sep?)
 non_def_arg_list: (notes non_def_arg_list_item? (_expr_sep non_def_arg_list_item)* _expr_sep?)
 
