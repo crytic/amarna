@@ -1,2 +1,2 @@
-[must-check-caller-address] in get_caller_address.cairo:6:10
-[unused-function] in get_caller_address.cairo:14:1
+[must-check-caller-address] in get_caller_address.cairo:4:10
+[unused-function] in get_caller_address.cairo:12:1

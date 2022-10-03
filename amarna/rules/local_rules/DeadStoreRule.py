@@ -27,7 +27,7 @@ class DeadStoreRule(GenericRule):
                 implicits_and_arguments.append(str(args.children[0]))
 
         # gather call template names
-        for allargs in tree.find_data("non_def_expr_assignment"):
+        for allargs in tree.find_data("expr_assignment"):
             for args in allargs.find_data("identifier_def"):
                 implicits_and_arguments.append(str(args.children[0]))
 

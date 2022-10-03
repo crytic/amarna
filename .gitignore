@@ -27,3 +27,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# codeql
+queries/
+amarna.db/
+
+# sarif viewer
+*.sarif.notes
