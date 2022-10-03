@@ -57,7 +57,7 @@ def filter_results_from_disable(
     results: List[Union[Result, ResultMultiplePositions]]
 ) -> List[Union[Result, ResultMultiplePositions]]:
     first_lines_per_file: Dict[str, str] = {}
-    disable_token = "# amarna: disable="
+    disable_token = "// amarna: disable="
 
     new_results = []
     for result in results:

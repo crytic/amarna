@@ -8,6 +8,7 @@ HEXINT: /0x[0-9a-fA-F]+/
 HINT: /%\{(.*?)%\}/s
 IDENTIFIER: /[a-zA-Z_][a-zA-Z_0-9]*/
 STRING: /"(.*?)"/
+PYCONST: /%\[.*?%\]/s
 SHORT_STRING: /'(.*?)'/
 _DBL_PLUS: "++"
 _DBL_EQ: "=="
@@ -57,6 +58,7 @@ identifier_def: IDENTIFIER
      | HEXINT                                 -> atom_hex_number
      | SHORT_STRING                           -> atom_short_string
      | "nondet" HINT                          -> atom_hint
+     | PYCONST                                -> atom_pyconst
      | reg                                    -> atom_reg
      | function_call                          -> atom_func_call
      | identifier                             -> atom_identifier // changed for amarna

@@ -24,7 +24,7 @@ Analyze a single file `file.cairo` and print a summary of the results:
  ```bash
  amarna file.cairo -s
  ```
- 
+
 ### Integration
  - For GitHub action integration, use [amarna-action](https://github.com/crytic/amarna-action).
 
@@ -63,7 +63,7 @@ Analyze a single file `code.cairo` and print a summary of the results:
  ```bash
  amarna code.cairo -s
  ```
- 
+
 Parse a Cairo file and output the recovered AST in `png`:
  ```bash
  amarna file.cairo -png
@@ -156,8 +156,8 @@ Run amarna with all rules except a defined set of rules using
 ### Inline rule disabling comments
 You can change the first line of a cairo file to disable a specific rule set on that file.
 For example, adding the line
-```python
-# amarna: disable=arithmetic-div,arithmetic-sub,arithmetic-mul,arithmetic-add
+```c
+// amarna: disable=arithmetic-div,arithmetic-sub,arithmetic-mul,arithmetic-add
 ```
 as the first line of `file.cairo` and running amarna with
 ```bash
