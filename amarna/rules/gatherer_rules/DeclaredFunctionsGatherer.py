@@ -35,7 +35,11 @@ class DeclaredFunctionsGatherer(GenericGatherer):
 
         # find if the current tree is part of a @contract_interface
         # to ignore if unused in that case
-        for struct in self.original_tree.find_data("code_element_struct"):
+        namespace_struct = list(self.original_tree.find_data("code_element_namespace")) + list(
+            self.original_tree.find_data("code_element_struct")
+        )
+
+        for struct in namespace_struct:
             for child in struct.find_data("decorator_list"):
                 for decorator in child.find_data("identifier_def"):
                     if decorator.children[0] in ["contract_interface"]:
@@ -58,4 +62,5 @@ class DeclaredFunctionsGatherer(GenericGatherer):
         assert function_name
 
         func = FunctionType(function_name, getPosition(tree), self.fname, decorators)
+        print(func)
         self.declared_functions.append(func)

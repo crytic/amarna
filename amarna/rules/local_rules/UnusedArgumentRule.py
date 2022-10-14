@@ -79,7 +79,10 @@ class UnusedArgumentRule(GenericRule):
 
         # find if the current tree is part of a @contract_interface
         # to ignore unused arguments in that case
-        for struct in self.original_tree.find_data("code_element_struct"):
+        structures_namespaces = list(self.original_tree.find_data("code_element_struct")) + list(
+            self.original_tree.find_data("code_element_namespace")
+        )
+        for struct in structures_namespaces:
             for child in struct.find_data("decorator_list"):
                 for decorator in child.find_data("identifier_def"):
                     if decorator.children[0] == "contract_interface":
