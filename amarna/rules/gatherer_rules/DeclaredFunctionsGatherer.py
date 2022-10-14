@@ -62,5 +62,4 @@ class DeclaredFunctionsGatherer(GenericGatherer):
         assert function_name
 
         func = FunctionType(function_name, getPosition(tree), self.fname, decorators)
-        print(func)
         self.declared_functions.append(func)
