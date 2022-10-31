@@ -26,6 +26,8 @@ Analyze a Cairo file using all rules except the arithmetic-add rule:
  amarna file.cairo --except-rules=arithmetic-add
  """
 
+DEPRECATED_RULES = ["storage-var-collision", "implicit-import"]
+
 
 def parse_comma_sep_strings(s: str) -> List[str]:
     if s:
@@ -48,7 +50,7 @@ def get_rule_names(rule_str: str, excluded_str: str) -> List[str]:
     if rules:
         base_rules = rules
     else:
-        base_rules = ALL_RULES
+        base_rules = [rule for rule in ALL_RULES if rule not in DEPRECATED_RULES]
 
     return [rule for rule in base_rules if rule not in excluded]
 
