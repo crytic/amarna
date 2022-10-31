@@ -42,8 +42,8 @@ Analyze a single file `file.cairo` and print a summary of the results:
 | 8   | Dead stores                 | Variables that are assigned values but not used before a return statement                                                 | Info    | Medium    |
 | 9   | Unchecked overflows         | Function calls that ignore the returned overflow flags, e.g., `uint256_add`                                               | Warning | High      |
 | 10  | Caller address return value | Function calls to the `get_caller_address` function.                                                                      | Info    | High      |
-| 11  | Storage variable collision  | Multiple `@storage_var` with the same name.                                                                               | Warning | High      |
-| 12  | Implicit function import    | Function with decorator `@external, @view, @l1_handler` that is being implicitly imported.                                | Info    | High      |
+| 11  | Storage variable collision  | Multiple `@storage_var` with the same name. (deprecated)                                                                  | Warning | High      |
+| 12  | Implicit function import    | Function with decorator `@external, @view, @l1_handler` that is being implicitly imported. (deprecated)                   | Info    | High      |
 | 13  | Unenforced view function    | State modification within a `@view` function                                                                              | Info    | High      |
 | 14  | Uninitialized variable      | Local variables that are never initialized.                                                                               | Info    | High      |
 
