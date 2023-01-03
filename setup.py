@@ -15,6 +15,7 @@ setup(
     install_requires=[
         "lark>=1.1.2",
         "pydot>=1.4.2",
+        "setuptools>=65.5.1",
     ],
     long_description=long_description,
     long_description_content_type="text/markdown",
