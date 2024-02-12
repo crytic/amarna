@@ -19,7 +19,7 @@ class UninitializedVariableRule(GenericRule):
         assigned_variables: Set[Token] = set()
 
         for local_declaration in tree.find_data("code_element_local_var"):
-            # only gather unintialized locals
+            # only gather uninitialized locals
             if len(local_declaration.children) == 1:
                 for child in local_declaration.children[0].find_data("identifier_def"):
                     local_variables.add(child.children[0])

@@ -23,6 +23,6 @@ class GenericGatherer(Visitor, Generic[GenericGatherType]):
         return self.get_gathered_data()
 
     def get_gathered_data(self) -> GenericGatherType:
-        # Overriden in inherited class
+        # Overridden in inherited class
         # TODO (montyly): use abc?
         return self.results
