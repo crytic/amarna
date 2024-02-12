@@ -34,7 +34,7 @@ class UnknownDecoratorRule(GenericRule):
                         unknown_decorators.append(decorator)
 
         for arg in unknown_decorators:
-            # TODO (montyly): mypy compain about the next attributes access
+            # TODO (montyly): mypy complain about the next attributes access
             positions = PositionType(arg.line, arg.column, arg.end_line, arg.end_column)  # type: ignore
             sarif = create_result(
                 self.fname,
