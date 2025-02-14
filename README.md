@@ -1,3 +1,5 @@
+This repo is archived. You can use [caracal](https://github.com/crytic/caracal) instead.
+
 # Amarna
 
 Amarna is a static-analyzer and linter for the Cairo programming language.
